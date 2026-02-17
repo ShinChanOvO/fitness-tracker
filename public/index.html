@@ -8,60 +8,38 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg-primary: #0f0f0f;
-      --bg-secondary: #1a1a1a;
-      --bg-tertiary: #252525;
-      --text-primary: #ffffff;
-      --text-secondary: #a0a0a0;
-      --text-muted: #666666;
-      --accent: #00d4aa;
-      --accent-glow: rgba(0, 212, 170, 0.3);
-      --danger: #ff6b6b;
-      --warning: #ffd93d;
-      --success: #6bcb77;
-      --card-bg: rgba(255, 255, 255, 0.03);
-      --border: rgba(255, 255, 255, 0.08);
-      --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    }
-    .theme-light { --bg-primary: #f5f5f7; --bg-secondary: #ffffff; --bg-tertiary: #e8e8ed; --text-primary: #1d1d1f; --text-secondary: #6e6e73; --accent: #00a884; --accent-glow: rgba(0, 168, 132, 0.2); --card-bg: rgba(255, 255, 255, 0.8); --border: rgba(0, 0, 0, 0.08); }
-    .theme-ocean { --bg-primary: #0a1628; --bg-secondary: #112240; --bg-tertiary: #1a3152; --accent: #64ffda; --accent-glow: rgba(100, 255, 218, 0.25); --card-bg: rgba(100, 255, 218, 0.05); --border: rgba(100, 255, 218, 0.15); }
-    .theme-sunset { --bg-primary: #1a0a0a; --bg-secondary: #2d1515; --bg-tertiary: #3d1f1f; --accent: #ff6b6b; --accent-glow: rgba(255, 107, 107, 0.25); --card-bg: rgba(255, 107, 107, 0.05); --border: rgba(255, 107, 107, 0.15); }
+    :root { --bg-primary: #0f0f0f; --bg-secondary: #1a1a1a; --bg-tertiary: #252525; --text-primary: #ffffff; --text-secondary: #a0a0a0; --text-muted: #666666; --accent: #00d4aa; --accent-glow: rgba(0, 212, 170, 0.3); --danger: #ff6b6b; --success: #6bcb77; --card-bg: rgba(255, 255, 255, 0.03); --border: rgba(255, 255, 255, 0.08); }
+    .theme-light { --bg-primary: #f5f5f7; --bg-secondary: #ffffff; --bg-tertiary: #e8e8ed; --text-primary: #1d1d1f; --text-secondary: #6e6e73; --accent: #00a884; --card-bg: rgba(255,255,255,0.8); --border: rgba(0,0,0,0.08); }
+    .theme-ocean { --bg-primary: #0a1628; --bg-secondary: #112240; --bg-tertiary: #1a3152; --accent: #64ffda; --accent-glow: rgba(100,255,218,0.25); --card-bg: rgba(100,255,218,0.05); --border: rgba(100,255,218,0.15); }
+    .theme-sunset { --bg-primary: #1a0a0a; --bg-secondary: #2d1515; --bg-tertiary: #3d1f1f; --accent: #ff6b6b; --accent-glow: rgba(255,107,107,0.25); --card-bg: rgba(255,107,107,0.05); --border: rgba(255,107,107,0.15); }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; transition: background 0.3s, color 0.3s; -webkit-tap-highlight-color: transparent; }
-    .app { max-width: 480px; margin: 0 auto; min-height: 100vh; position: relative; }
-    .auth-page { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 24px; background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%); }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
+    .app { max-width: 480px; margin: 0 auto; min-height: 100vh; }
+    .auth-page { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 24px; background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary)); }
     .auth-logo { text-align: center; margin-bottom: 40px; }
-    .auth-logo svg { width: 80px; height: 80px; margin-bottom: }
-    .auth 16px;-logo h1 { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--accent), #00ffcc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .auth-logo p { color: var(--text-secondary); margin-top: 8px; font-size: 14px; }
+    .auth-logo svg { width: 80px; height: 80px; }
+    .auth-logo h1 { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--accent), #00ffcc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .auth-logo p { color: var(--text-secondary); margin-top: 8px; }
     .auth-form { display: flex; flex-direction: column; gap: 16px; }
-    .input-group { position: relative; }
-    .input-group input { width: 100%; padding: 16px 20px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 16px; outline: none; transition: all 0.2s; }
+    .input-group input { width: 100%; padding: 16px 20px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 16px; outline: none; }
     .input-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-    .btn { padding: 16px 24px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn { padding: 16px 24px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; }
     .btn-primary { background: var(--accent); color: var(--bg-primary); }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px var(--accent-glow); }
-    .btn-secondary { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border); }
     .btn-block { width: 100%; }
-    .auth-switch { text-align: center; margin-top: 24px; color: var(--text-secondary); font-size: 14px; }
+    .auth-switch { text-align: center; margin-top: 24px; color: var(--text-secondary); }
     .auth-switch a { color: var(--accent); text-decoration: none; font-weight: 500; }
     .main-app { display: none; }
-    .header { position: sticky; top: 0; background: var(--bg-primary); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; backdrop-filter: blur(12px); background: rgba(15, 15, 15, 0.9); }
-    .theme-light .header { background: rgba(245, 245, 247, 0.9); }
+    .header { position: sticky; top: 0; background: var(--bg-primary); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; backdrop-filter: blur(12px); }
     .header h1 { font-size: 20px; font-weight: 600; }
-    .header-actions { display: flex; gap: 8px; }
-    .icon-btn { width: 40px; height: 40px; border-radius: 10px; background: var(--bg-tertiary); border: none; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-    .icon-btn:hover { background: var(--accent); color: var(--bg-primary); }
+    .icon-btn { width: 40px; height: 40px; border-radius: 10px; background: var(--bg-tertiary); border: none; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-secondary); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; padding-bottom: calc(8px + env(safe-area-inset-bottom)); z-index: 100; }
-    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; color: var(--text-muted); text-decoration: none; font-size: 11px; font-weight: 500; transition: all 0.2s; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; color: var(--text-muted); text-decoration: none; font-size: 11px; font-weight: 500; }
     .nav-item.active { color: var(--accent); }
     .nav-item svg { width: 24px; height: 24px; }
     .page { display: none; padding: 20px; padding-bottom: 100px; }
     .page.active { display: block; }
     .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
-    .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; transition: all 0.2s; }
-    .stat-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+    .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
     .stat-card .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 20px; }
     .stat-card .value { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
     .stat-card .label { font-size: 13px; color: var(--text-secondary); }
@@ -69,58 +47,54 @@
     .record-card .info { flex: 1; }
     .record-card .title { font-weight: 600; margin-bottom: 4px; }
     .record-card .meta { font-size: 13px; color: var(--text-secondary); }
-    .record-card .actions { display: flex; gap: 8px; }
-    .record-card .btn-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--bg-tertiary); border: none; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .record-card .btn-icon:hover { color: var(--danger); }
+    .record-card .btn-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--bg-tertiary); border: none; color: var(--text-secondary); cursor: pointer; }
     .quick-add { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 24px; }
-    .quick-add-btn { aspect-ratio: 1; border-radius: 16px; background: var(--card-bg); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: all 0.2s; }
+    .quick-add-btn { aspect-ratio: 1; border-radius: 16px; background: var(--card-bg); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
     .quick-add-btn:hover { border-color: var(--accent); transform: scale(1.05); }
     .quick-add-btn span { font-size: 24px; }
     .quick-add-btn label { font-size: 10px; color: var(--text-secondary); }
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); display: none; align-items: flex-end; justify-content: center; z-index: 200; }
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; align-items: flex-end; justify-content: center; z-index: 200; }
     .modal-overlay.active { display: flex; }
-    .modal { width: 100%; max-width: 480px; background: var(--bg-secondary); border-radius: 24px 24px 0 0; padding: 24px; padding-bottom: calc(24px + env(safe-area-inset-bottom)); animation: slideUp 0.3s ease; }
+    .modal { width: 100%; max-width: 480px; background: var(--bg-secondary); border-radius: 24px 24px 0 0; padding: 24px; animation: slideUp 0.3s; }
     @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .modal-header h2 { font-size: 20px; font-weight: 600; }
-    .modal-close { width: 32px; height: 32px; border-radius: 8px; background: var(--bg-tertiary); border: none; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .modal-header h2 { font-size: 20px; }
+    .modal-close { width: 32px; height: 32px; border-radius: 8px; background: var(--bg-tertiary); border: none; color: var(--text-primary); cursor: pointer; }
     .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 8px; }
+    .form-group label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
     .form-group input, .form-group select { width: 100%; padding: 14px 16px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 16px; outline: none; }
-    .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+    .form-group input:focus { border-color: var(--accent); }
     .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .water-progress { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 24px; }
-    .water-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .water-header h3 { font-size: 16px; font-weight: 600; }
+    .water-header { display: flex; justify-content: space-between; margin-bottom: 16px; }
+    .water-header h3 { font-size: 16px; }
     .water-progress-bar { height: 12px; background: var(--bg-tertiary); border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
-    .water-progress-fill { height: 100%; background: linear-gradient(90deg, #00d4aa, #00ffcc); border-radius: 6px; transition: width 0.3s ease; }
+    .water-progress-fill { height: 100%; background: linear-gradient(90deg, #00d4aa, #00ffcc); border-radius: 6px; transition: width 0.3s; }
     .water-controls { display: flex; gap: 8px; margin-top: 16px; }
-    .water-btn { flex: 1; padding: 12px; border-radius: 10px; background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-primary); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+    .water-btn { flex: 1; padding: 12px; border-radius: 10px; background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-primary); font-size: 14px; cursor: pointer; }
     .water-btn:hover { border-color: var(--accent); background: var(--accent); color: var(--bg-primary); }
-    .date-selector { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 8px; }
-    .date-btn { flex-shrink: 0; padding: 8px 16px; border-radius: 20px; background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-secondary); font-size: 13px; cursor: pointer; transition: all 0.2s; }
+    .date-selector { display: flex; gap: 12px; margin-bottom: 20px; overflow-x: auto; }
+    .date-btn { flex-shrink: 0; padding: 8px 16px; border-radius: 20px; background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-secondary); font-size: 13px; cursor: pointer; }
     .date-btn.active { background: var(--accent); color: var(--bg-primary); border-color: var(--accent); }
     .settings-section { margin-bottom: 24px; }
-    .settings-section h3 { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-    .settings-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; cursor: pointer; }
-    .settings-item .label { font-weight: 500; }
-    .settings-item .value { color: var(--text-secondary); font-size: 14px; }
+    .settings-section h3 { font-size: 13px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 12px; }
+    .settings-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; margin-bottom: 8px; cursor: pointer; }
     .theme-options { display: flex; gap: 8px; margin-top: 12px; }
-    .theme-option { flex: 1; padding: 12px; border-radius: 10px; border: 2px solid var(--border); cursor: pointer; text-align: center; font-size: 13px; transition: all 0.2s; }
+    .theme-option { flex: 1; padding: 12px; border-radius: 10px; border: 2px solid var(--border); cursor: pointer; text-align: center; font-size: 13px; }
     .theme-option.active { border-color: var(--accent); }
-    .empty-state { text-align: center; padding: 40px 20px; color: var(--text-muted); }
-    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--bg-tertiary); border: 1px solid var(--border); padding: 12px 20px; border-radius: 10px; font-size: 14px; opacity: 0; transition: all 0.3s; z-index: 300; }
+    .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
+    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--bg-tertiary); border: 1px solid var(--border); padding: 12px 20px; border-radius: 10px; font-size: 14px; opacity: 0; transition: 0.3s; z-index: 300; }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .toast.success { border-color: var(--success); color: var(--success); }
     .toast.error { border-color: var(--danger); color: var(--danger); }
-    .logout-btn { width: 100%; padding: 14px; background: rgba(255, 107, 107, 0.1); border: 1px solid var(--danger); border-radius: 12px; color: var(--danger); font-size: 15px; font-weight: 500; cursor: pointer; margin-top: 32px; }
+    .logout-btn { width: 100%; padding: 14px; background: rgba(255,107,107,0.1); border: 1px solid var(--danger); border-radius: 12px; color: var(--danger); font-size: 15px; cursor: pointer; margin-top: 32px; }
   </style>
 </head>
 <body>
   <div class="app">
     <div class="auth-page" id="authPage">
       <div class="auth-logo">
-        <svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="40" r="36" stroke="url(#grad)" stroke-width="4"/><path d="M40 20 L40 45 M28 33 L40 45 L52 33" stroke="url(#grad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4aa"/><stop offset="100%" stop-color="#00ffcc"/></linearGradient></defs></svg>
+        <svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="40" r="36" stroke="url(#grad)" stroke-width="4"/><path d="M40 20 L40 45 M28 33 L40 45 L52 33" stroke="url(#grad)" stroke-width="3" stroke-linecap="round"/><defs><linearGradient id="grad" x1="0" y1="0" x2="100" y2="100"><stop offset="0" stop-color="#00d4aa"/><stop offset="100" stop-color="#00ffcc"/></linearGradient></defs></svg>
         <h1>健身追踪器</h1>
         <p>记录你的每一次进步</p>
       </div>
@@ -131,9 +105,9 @@
       </form>
       <p class="auth-switch">还没有账号？<a href="#" id="showRegister">立即注册</a></p>
     </div>
-    <div class="auth-page" id="registerPage" style="display: none;">
+    <div class="auth-page" id="registerPage" style="display:none">
       <div class="auth-logo">
-        <svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="40" r="36" stroke="url(#grad)" stroke-width="4"/><path d="M40 20 L40 45 M28 33 L40 45 L52 33" stroke="url(#grad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00d4aa"/><stop offset="100%" stop-color="#00ffcc"/></linearGradient></defs></svg>
+        <svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="40" r="36" stroke="url(#grad)" stroke-width="4"/><path d="M40 20 L40 45 M28 33 L40 45 L52 33" stroke="url(#grad)" stroke-width="3" stroke-linecap="round"/><defs><linearGradient id="grad" x1="0" y1="0" x2="100" y2="100"><stop offset="0" stop-color="#00d4aa"/><stop offset="100" stop-color="#00ffcc"/></linearGradient></defs></svg>
         <h1>创建账号</h1>
         <p>开始你的健身之旅</p>
       </div>
@@ -145,14 +119,11 @@
       <p class="auth-switch">已有账号？<a href="#" id="showLogin">立即登录</a></p>
     </div>
     <div class="main-app" id="mainApp">
-      <header class="header">
-        <h1>健身追踪</h1>
-        <div class="header-actions"><button class="icon-btn" id="settingsBtn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button></div>
-      </header>
+      <header class="header"><h1>健身追踪</h1><button class="icon-btn" id="settingsBtn">⚙️</button></header>
       <div class="page active" id="homePage">
         <div class="water-progress">
           <div class="water-header"><h3>💧 今日饮水</h3><span id="waterText">0 / 2000 ml</span></div>
-          <div class="water-progress-bar"><div class="water-progress-fill" id="waterFill" style="width: 0%"></div></div>
+          <div class="water-progress-bar"><div class="water-progress-fill" id="waterFill" style="width:0%"></div></div>
           <div class="water-controls">
             <button class="water-btn" onclick="addWater(250)">+250ml</button>
             <button class="water-btn" onclick="addWater(500)">+500ml</button>
@@ -165,19 +136,19 @@
           <button class="quick-add-btn" onclick="openModal('weight')"><span>⚖️</span><label>体重</label></button>
           <button class="quick-add-btn" onclick="openModal('water')"><span>💧</span><label>喝水</label></button>
         </div>
-        <h3 style="margin-bottom: 12px; font-size: 16px;">📊 本周统计</h3>
-        <div class="stats-grid" id="statsGrid">
-          <div class="stat-card"><div class="icon" style="background: rgba(0, 212, 170, 0.2);">🏋️</div><div class="value" id="weekWorkouts">0</div><div class="label">锻炼次数</div></div>
-          <div class="stat-card"><div class="icon" style="background: rgba(255, 107, 107, 0.2);">🔥</div><div class="value" id="weekCalories">0</div><div class="label">摄入卡路里</div></div>
-          <div class="stat-card"><div class="icon" style="background: rgba(255, 217, 61, 0.2);">💪</div><div class="value" id="weekWeight">--</div><div class="label">当前体重</div></div>
-          <div class="stat-card"><div class="icon" style="background: rgba(107, 203, 119, 0.2);">💧</div><div class="value" id="weekWater">0</div><div class="label">饮水量(ml)</div></div>
+        <h3 style="margin-bottom:12px">📊 本周统计</h3>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="icon" style="background:rgba(0,212,170,0.2)">🏋️</div><div class="value" id="weekWorkouts">0</div><div class="label">锻炼次数</div></div>
+          <div class="stat-card"><div class="icon" style="background:rgba(255,107,107,0.2)">🔥</div><div class="value" id="weekCalories">0</div><div class="label">摄入卡路里</div></div>
+          <div class="stat-card"><div class="icon" style="background:rgba(255,217,61,0.2)">💪</div><div class="value" id="weekWeight">--</div><div class="label">当前体重</div></div>
+          <div class="stat-card"><div class="icon" style="background:rgba(107,203,119,0.2)">💧</div><div class="value" id="weekWater">0</div><div class="label">饮水量</div></div>
         </div>
-        <h3 style="margin: 24px 0 12px; font-size: 16px;">📝 今日记录</h3>
+        <h3 style="margin:24px 0 12px">📝 今日记录</h3>
         <div id="todayRecords"><div class="empty-state"><p>今天还没有记录</p></div></div>
       </div>
       <div class="page" id="recordsPage">
         <div class="date-selector" id="dateSelector"></div>
-        <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+        <div style="display:flex;gap:8px;margin-bottom:20px">
           <button class="date-btn active" onclick="filterRecords('all')">全部</button>
           <button class="date-btn" onclick="filterRecords('workout')">健身</button>
           <button class="date-btn" onclick="filterRecords('meal')">饮食</button>
@@ -186,14 +157,14 @@
         <div id="recordsList"><div class="empty-state"><p>暂无记录</p></div></div>
       </div>
       <div class="page" id="statsPage">
-        <h3 style="margin-bottom: 16px;">📈 数据统计</h3>
+        <h3 style="margin-bottom:16px">📈 数据统计</h3>
         <div class="stats-grid">
-          <div class="stat-card"><div class="icon" style="background: rgba(0, 212, 170, 0.2);">🏋️</div><div class="value" id="totalWorkouts">0</div><div class="label">总锻炼次数</div></div>
-          <div class="stat-card"><div class="icon" style="background: rgba(255, 107, 107, 0.2);">🔥</div><div class="value" id="totalCalories">0</div><div class="label">总摄入卡路里</div></div>
-          <div class="stat-card"><div class="icon" style="background: rgba(255, 217, 61, 0.2);">🥩</div><div class="value" id="totalProtein">0g</div><div class="label">总蛋白质</div></div>
-          <div class="stat-card"><div class="icon" style="background: rgba(107, 203, 119, 0.2);">💧</div><div class="value" id="totalWater">0</div><div class="label">总饮水量(ml)</div></div>
+          <div class="stat-card"><div class="icon" style="background:rgba(0,212,170,0.2)">🏋️</div><div class="value" id="totalWorkouts">0</div><div class="label">总锻炼次数</div></div>
+          <div class="stat-card"><div class="icon" style="background:rgba(255,107,107,0.2)">🔥</div><div class="value" id="totalCalories">0</div><div class="label">总摄入卡路里</div></div>
+          <div class="stat-card"><div class="icon" style="background:rgba(255,217,61,0.2)">🥩</div><div class="value" id="totalProtein">0g</div><div class="label">总蛋白质</div></div>
+          <div class="stat-card"><div class="icon" style="background:rgba(107,203,119,0.2)">💧</div><div class="value" id="totalWater">0</div><div class="label">总饮水量</div></div>
         </div>
-        <h3 style="margin: 24px 0 12px;">体重趋势</h3>
+        <h3 style="margin:24px 0 12px">体重趋势</h3>
         <div class="record-card"><div class="info"><div class="title">最新体重</div><div class="meta" id="latestWeight">暂无数据</div></div></div>
         <div class="record-card"><div class="info"><div class="title">平均体重</div><div class="meta" id="avgWeight">暂无数据</div></div></div>
         <div class="record-card"><div class="info"><div class="title">最低体重</div><div class="meta" id="minWeight">暂无数据</div></div></div>
@@ -202,26 +173,25 @@
       <div class="page" id="settingsPage">
         <div class="settings-section">
           <h3>外观</h3>
-          <div class="settings-item"><span class="label">主题风格</span></div>
           <div class="theme-options">
-            <div class="theme-option active" data-theme="dark" onclick="setTheme('dark')">🌙 深色</div>
-            <div class="theme-option" data-theme="light" onclick="setTheme('light')">☀️ 浅色</div>
-            <div class="theme-option" data-theme="ocean" onclick="setTheme('ocean')">🌊 海洋</div>
-            <div class="theme-option" data-theme="sunset" onclick="setTheme('sunset')">🌅 日落</div>
+            <div class="theme-option active" data-theme="dark" onclick="setTheme('dark')">🌙</div>
+            <div class="theme-option" data-theme="light" onclick="setTheme('light')">☀️</div>
+            <div class="theme-option" data-theme="ocean" onclick="setTheme('ocean')">🌊</div>
+            <div class="theme-option" data-theme="sunset" onclick="setTheme('sunset')">🌅</div>
           </div>
         </div>
         <div class="settings-section">
           <h3>目标</h3>
-          <div class="settings-item" onclick="openGoalModal('water')"><span class="label">每日饮水目标</span><span class="value" id="waterGoalValue">2000ml</span></div>
-          <div class="settings-item" onclick="openGoalModal('calorie')"><span class="label">每日卡路里目标</span><span class="value" id="calorieGoalValue">2000kcal</span></div>
+          <div class="settings-item" onclick="openGoalModal('water')"><span>每日饮水目标</span><span class="value" id="waterGoalValue">2000ml</span></div>
+          <div class="settings-item" onclick="openGoalModal('calorie')"><span>每日卡路里目标</span><span class="value" id="calorieGoalValue">2000kcal</span></div>
         </div>
         <button class="logout-btn" onclick="logout()">退出登录</button>
       </div>
       <nav class="bottom-nav">
-        <a href="#" class="nav-item active" data-page="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>首页</a>
-        <a href="#" class="nav-item" data-page="records"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>记录</a>
-        <a href="#" class="nav-item" data-page="stats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>统计</a>
-        <a href="#" class="nav-item" data-page="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>设置</a>
+        <a href="#" class="nav-item active" data-page="home">🏠<span>首页</span></a>
+        <a href="#" class="nav-item" data-page="records">📝<span>记录</span></a>
+        <a href="#" class="nav-item" data-page="stats">📊<span>统计</span></a>
+        <a href="#" class="nav-item" data-page="settings">⚙️<span>设置</span></a>
       </nav>
     </div>
   </div>
@@ -229,18 +199,18 @@
     <div class="modal">
       <div class="modal-header"><h2 id="modalTitle">添加记录</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
       <form id="recordForm">
-        <div id="workoutFields" style="display: none;">
-          <div class="form-group"><label>运动类型</label><select id="workoutType"><option value="力量训练">力量训练</option><option value="有氧运动">有氧运动</option><option value="瑜伽">瑜伽</option><option value="游泳">游泳</option><option value="骑行">骑行</option><option value="跑步">跑步</option><option value="其他">其他</option></select></div>
-          <div class="form-row"><div class="form-group"><label>时长(分钟)</label><input type="number" id="workoutDuration" placeholder="0"></div><div class="form-group"><label>重量(kg)</label><input type="number" id="workoutWeight" placeholder="0" step="0.5"></div></div>
-          <div class="form-row"><div class="form-group"><label>组数</label><input type="number" id="workoutSets" placeholder="0"></div><div class="form-group"><label>次数</label><input type="number" id="workoutReps" placeholder="0"></div></div>
-          <div class="form-group"><label>备注</label><input type="text" id="workoutNotes" placeholder="可选备注"></div></div>
-        <div id="mealFields" style="display: none;">
-          <div class="form-group"><label>餐次</label><select id="mealType"><option value="早餐">早餐</option><option value="午餐">午餐</option><option value="晚餐">晚餐</option><option value="加餐">加餐</option></select></div>
-          <div class="form-group"><label>食物</label><input type="text" id="mealFood" placeholder="吃了什么？" required></div>
-          <div class="form-row"><div class="form-group"><label>卡路里(kcal)</label><input type="number" id="mealCalories" placeholder="0"></div><div class="form-group"><label>蛋白质(g)</label><input type="number" id="mealProtein" placeholder="0" step="0.1"></div></div>
-          <div class="form-row"><div class="form-group"><label>碳水(g)</label><input type="number" id="mealCarbs" placeholder="0" step="0.1"></div><div class="form-group"><label>脂肪(g)</label><input type="number" id="mealFat" placeholder="0" step="0.1"></div></div></div>
-        <div id="weightFields" style="display: none;"><div class="form-group"><label>体重 (kg)</label><input type="number" id="weightValue" placeholder="请输入体重" step="0.1" required></div></div>
-        <div id="waterFields" style="display: none;"><div class="form-group"><label>饮水量 (ml)</label><input type="number" id="waterAmount" placeholder="请输入水量" required></div></div>
+        <div id="workoutFields" style="display:none">
+          <div class="form-group"><label>运动类型</label><select id="workoutType"><option>力量训练</option><option>有氧运动</option><option>瑜伽</option><option>游泳</option><option>骑行</option><option>跑步</option></select></div>
+          <div class="form-row"><div class="form-group"><label>时长(分钟)</label><input type="number" id="workoutDuration"></div><div class="form-group"><label>重量(kg)</label><input type="number" id="workoutWeight" step="0.5"></div></div>
+          <div class="form-row"><div class="form-group"><label>组数</label><input type="number" id="workoutSets"></div><div class="form-group"><label>次数</label><input type="number" id="workoutReps"></div></div>
+        </div>
+        <div id="mealFields" style="display:none">
+          <div class="form-group"><label>餐次</label><select id="mealType"><option>早餐</option><option>午餐</option><option>晚餐</option><option>加餐</option></select></div>
+          <div class="form-group"><label>食物</label><input type="text" id="mealFood" required></div>
+          <div class="form-row"><div class="form-group"><label>卡路里</label><input type="number" id="mealCalories"></div><div class="form-group"><label>蛋白质(g)</label><input type="number" id="mealProtein" step="0.1"></div></div>
+        </div>
+        <div id="weightFields" style="display:none"><div class="form-group"><label>体重(kg)</label><input type="number" id="weightValue" step="0.1" required></div></div>
+        <div id="waterFields" style="display:none"><div class="form-group"><label>饮水量(ml)</label><input type="number" id="waterAmount" required></div></div>
         <div class="form-group"><label>日期</label><input type="date" id="recordDate"></div>
         <button type="submit" class="btn btn-primary btn-block">保存</button>
       </form>
@@ -257,12 +227,10 @@
   </div>
   <div class="toast" id="toast"></div>
   <script>
-    // 用免费 JSONBin.io 存储数据
-    const JSONBIN_BASE = 'https://api.jsonbin.io/v3/b';
-    const JSONBIN_MASTER_KEY = '$2a$10$XYZPLACEHOLDERXYZ'; // 公开bin不需要密钥
+    // 数据存在 localStorage
+    const STORAGE_KEY = 'fitness_data';
     
     let userData = null;
-    let binId = localStorage.getItem('binId');
     let currentPage = 'home';
     let currentModalType = '';
     let currentGoalType = '';
@@ -270,133 +238,85 @@
     let allRecords = { workouts: [], meals: [], weights: [], water: [] };
     let settings = { theme: 'dark', daily_water_goal: 2000, daily_calorie_goal: 2000 };
 
-    // 创建新bin
-    async function createBin(data) {
-      try {
-        const res = await fetch(`${JSONBIN_BASE}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        const json = await res.json();
-        return json.metadata.id;
-      } catch(e) { console.error('createBin error', e); return null; }
+    // 保存数据
+    function saveData() {
+      if (userData) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+      }
     }
 
-    // 读取bin
-    async function readBin(id) {
-      try {
-        const res = await fetch(`${JSONBIN_BASE}/${id}/latest`, {
-          headers: { 'secret-key': '' }
-        });
-        if (!res.ok) return null;
-        return await res.json();
-      } catch(e) { console.error('readBin error', e); return null; }
-    }
-
-    // 更新bin
-    async function updateBin(id, data) {
-      try {
-        await fetch(`${JSONBIN_BASE}/${id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', 'secret-key': '' },
-          body: JSON.stringify(data)
-        });
+    // 加载数据
+    function loadData() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        userData = JSON.parse(saved);
+        settings = userData.settings || { theme: 'dark', daily_water_goal: 2000, daily_calorie_goal: 2000 };
         return true;
-      } catch(e) { console.error('updateBin error', e); return false; }
+      }
+      return false;
     }
 
     // 初始化
     document.addEventListener('DOMContentLoaded', () => {
-      if (binId) { loadUserData(); }
-      else { showAuthPage(); }
+      if (loadData()) {
+        showMainApp();
+        loadTodayData();
+        loadWeekStats();
+        loadAllStats();
+      } else {
+        showAuthPage();
+      }
+      applyTheme(settings.theme);
       setupEventListeners();
     });
 
     function setupEventListeners() {
       document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', (e) => { e.preventDefault(); navigateTo(item.dataset.page); });
+        item.addEventListener('click', e => { e.preventDefault(); navigateTo(item.dataset.page); });
       });
       document.getElementById('loginForm').addEventListener('submit', handleLogin);
       document.getElementById('registerForm').addEventListener('submit', handleRegister);
-      document.getElementById('showRegister').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('authPage').style.display = 'none'; document.getElementById('registerPage').style.display = 'flex'; });
-      document.getElementById('showLogin').addEventListener('click', (e) => { e.preventDefault(); document.getElementById('registerPage').style.display = 'none'; document.getElementById('authPage').style.display = 'flex'; });
+      document.getElementById('showRegister').addEventListener('click', e => { e.preventDefault(); document.getElementById('authPage').style.display = 'none'; document.getElementById('registerPage').style.display = 'flex'; });
+      document.getElementById('showLogin').addEventListener('click', e => { e.preventDefault(); document.getElementById('registerPage').style.display = 'none'; document.getElementById('authPage').style.display = 'flex'; });
       document.getElementById('settingsBtn').addEventListener('click', () => navigateTo('settings'));
       document.getElementById('recordForm').addEventListener('submit', handleRecordSubmit);
       document.getElementById('goalForm').addEventListener('submit', handleGoalSubmit);
-      document.getElementById('recordModal').addEventListener('click', (e) => { if (e.target.id === 'recordModal') closeModal(); });
-      document.getElementById('goalModal').addEventListener('click', (e) => { if (e.target.id === 'goalModal') closeGoalModal(); });
+      document.getElementById('recordModal').addEventListener('click', e => { if (e.target.id === 'recordModal') closeModal(); });
+      document.getElementById('goalModal').addEventListener('click', e => { if (e.target.id === 'goalModal') closeGoalModal(); });
       document.getElementById('recordDate').value = selectedDate;
     }
 
-    // 登录/注册（本地存储 + JSONBin）
+    // 登录
     async function handleLogin(e) {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value;
-      const savedBinId = localStorage.getItem('bin_' + email);
-      if (savedBinId) {
-        binId = savedBinId;
-        localStorage.setItem('binId', binId);
-        await loadUserData();
+      if (loadData() && userData && userData.email === email) {
         showMainApp();
+        loadTodayData();
+        loadWeekStats();
+        loadAllStats();
       } else {
         showToast('账号不存在，请先注册', 'error');
       }
     }
 
+    // 注册
     async function handleRegister(e) {
       e.preventDefault();
       const email = document.getElementById('registerEmail').value;
-      const password = document.getElementById('registerPassword').value;
-      
-      // 创建新bin存储用户数据
-      const initialData = {
-        email, password,
+      userData = {
+        email,
         workouts: [], meals: [], weights: [], water: [],
-        settings: { theme: 'dark', daily_water_goal: 2000, daily_calorie_goal: 2000 },
-        createdAt: new Date().toISOString()
+        settings: { theme: 'dark', daily_water_goal: 2000, daily_calorie_goal: 2000 }
       };
-      
-      const newBinId = await createBin(initialData);
-      if (newBinId) {
-        binId = newBinId;
-        localStorage.setItem('binId', binId);
-        localStorage.setItem('bin_' + email, binId);
-        userData = initialData;
-        settings = userData.settings;
-        showMainApp();
-        showToast('注册成功！欢迎加入', 'success');
-        saveData();
-      } else {
-        showToast('注册失败，请重试', 'error');
-      }
-    }
-
-    async function loadUserData() {
-      if (!binId) return;
-      const data = await readBin(binId);
-      if (data && data.record) {
-        userData = data.record;
-        settings = userData.settings || { theme: 'dark', daily_water_goal: 2000, daily_calorie_goal: 2000 };
-        applyTheme(settings.theme);
-        loadTodayData();
-        loadWeekStats();
-        loadAllStats();
-        showMainApp();
-      } else {
-        showAuthPage();
-      }
-    }
-
-    async function saveData() {
-      if (binId && userData) {
-        await updateBin(binId, userData);
-      }
+      saveData();
+      showMainApp();
+      showToast('注册成功！', 'success');
+      loadTodayData();
     }
 
     function logout() {
-      localStorage.removeItem('binId');
-      binId = null;
+      localStorage.removeItem(STORAGE_KEY);
       userData = null;
       location.reload();
     }
@@ -415,12 +335,11 @@
 
     function navigateTo(page) {
       currentPage = page;
-      document.querySelectorAll('.nav-item').forEach(item => { item.classList.toggle('active', item.dataset.page === page); });
-      document.querySelectorAll('.page').forEach(p => { p.classList.toggle('active', p.id === `${page}Page`); });
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.dataset.page === page));
+      document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === page + 'Page'));
       if (page === 'records') renderDateSelector();
     }
 
-    // 数据操作
     function loadTodayData() {
       const date = new Date().toISOString().split('T')[0];
       allRecords.workouts = (userData.workouts || []).filter(r => r.date === date);
@@ -433,22 +352,16 @@
 
     function loadWeekStats() {
       const today = new Date();
-      const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const weekAgo = new Date(today.getTime() - 7*24*60*60*1000).toISOString().split('T')[0];
       const todayStr = today.toISOString().split('T')[0];
-      
-      const weekWorkouts = (userData.workouts || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
-      const weekMeals = (userData.meals || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
-      const weekWater = (userData.water || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
-      const weekWeights = (userData.weights || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
-      
-      document.getElementById('weekWorkouts').textContent = weekWorkouts.length;
-      document.getElementById('weekCalories').textContent = weekMeals.reduce((s, m) => s + (m.calories || 0), 0);
-      document.getElementById('weekWater').textContent = weekWater.reduce((s, w) => s + w.amount, 0);
-      
-      if (weekWeights.length > 0) {
-        const avg = weekWeights.reduce((s, w) => s + w.weight, 0) / weekWeights.length;
-        document.getElementById('weekWeight').textContent = avg.toFixed(1) + 'kg';
-      }
+      const weekW = (userData.workouts || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
+      const weekM = (userData.meals || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
+      const weekWt = (userData.water || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
+      const weekWg = (userData.weights || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
+      document.getElementById('weekWorkouts').textContent = weekW.length;
+      document.getElementById('weekCalories').textContent = weekM.reduce((s,m) => s + (m.calories||0), 0);
+      document.getElementById('weekWater').textContent = weekWt.reduce((s,w) => s + w.amount, 0);
+      if (weekWg.length) document.getElementById('weekWeight').textContent = (weekWg.reduce((s,w) => s + w.weight, 0) / weekWg.length).toFixed(1) + 'kg';
     }
 
     function loadAllStats() {
@@ -456,53 +369,43 @@
       const meals = userData.meals || [];
       const water = userData.water || [];
       const weights = userData.weights || [];
-      
       document.getElementById('totalWorkouts').textContent = workouts.length;
-      document.getElementById('totalCalories').textContent = meals.reduce((s, m) => s + (m.calories || 0), 0);
-      document.getElementById('totalProtein').textContent = meals.reduce((s, m) => s + (m.protein || 0), 0).toFixed(1) + 'g';
-      document.getElementById('totalWater').textContent = water.reduce((s, w) => s + w.amount, 0);
-      
-      if (weights.length > 0) {
-        const sorted = weights.sort((a, b) => new Date(b.date) - new Date(a.date));
+      document.getElementById('totalCalories').textContent = meals.reduce((s,m) => s + (m.calories||0), 0);
+      document.getElementById('totalProtein').textContent = meals.reduce((s,m) => s + (m.protein||0), 0).toFixed(1) + 'g';
+      document.getElementById('totalWater').textContent = water.reduce((s,w) => s + w.amount, 0);
+      if (weights.length) {
+        const sorted = [...weights].sort((a,b) => new Date(b.date) - new Date(a.date));
         document.getElementById('latestWeight').textContent = sorted[0].weight + 'kg';
-        const avg = weights.reduce((s, w) => s + w.weight, 0) / weights.length;
-        document.getElementById('avgWeight').textContent = avg.toFixed(1) + 'kg';
+        document.getElementById('avgWeight').textContent = (weights.reduce((s,w) => s + w.weight, 0) / weights.length).toFixed(1) + 'kg';
         document.getElementById('minWeight').textContent = Math.min(...weights.map(w => w.weight)) + 'kg';
         document.getElementById('maxWeight').textContent = Math.max(...weights.map(w => w.weight)) + 'kg';
       }
     }
 
     function renderTodayRecords() {
-      const container = document.getElementById('todayRecords');
       const records = [];
-      allRecords.workouts.forEach(r => records.push({ ...r, type: 'workout', title: r.type, meta: `${r.duration || 0}分钟` }));
-      allRecords.meals.forEach(r => records.push({ ...r, type: 'meal', title: r.food, meta: `${r.calories || 0}kcal` }));
-      allRecords.weights.forEach(r => records.push({ ...r, type: 'weight', title: '体重', meta: `${r.weight}kg` }));
-      allRecords.water.forEach(r => records.push({ ...r, type: 'water', title: '喝水', meta: `${r.amount}ml` }));
-      
-      if (records.length === 0) { container.innerHTML = '<div class="empty-state"><p>今天还没有记录</p></div>'; return; }
-      container.innerHTML = records.map(r => `<div class="record-card"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.meta}</div></div><div class="actions"><button class="btn-icon" onclick="deleteRecord('${r.type}', ${r.id})">🗑️</button></div></div>`).join('');
+      allRecords.workouts.forEach(r => records.push({...r, type:'workout', title:r.type, meta:`${r.duration||0}分钟`}));
+      allRecords.meals.forEach(r => records.push({...r, type:'meal', title:r.food, meta:`${r.calories||0}kcal`}));
+      allRecords.weights.forEach(r => records.push({...r, type:'weight', title:'体重', meta:`${r.weight}kg`}));
+      allRecords.water.forEach(r => records.push({...r, type:'water', title:'喝水', meta:`${r.amount}ml`}));
+      const html = records.length ? records.map(r => `<div class="record-card"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.meta}</div></div><button class="btn-icon" onclick="deleteRecord('${r.type}',${r.id})">🗑️</button></div>`).join('') : '<div class="empty-state"><p>今天还没有记录</p></div>';
+      document.getElementById('todayRecords').innerHTML = html;
     }
 
     function renderWaterProgress() {
-      const todayWater = allRecords.water.reduce((sum, r) => sum + r.amount, 0);
+      const todayWater = allRecords.water.reduce((s,r) => s + r.amount, 0);
       const goal = settings.daily_water_goal || 2000;
-      const percent = Math.min((todayWater / goal) * 100, 100);
       document.getElementById('waterText').textContent = `${todayWater} / ${goal} ml`;
-      document.getElementById('waterFill').style.width = `${percent}%`;
+      document.getElementById('waterFill').style.width = Math.min((todayWater/goal)*100, 100) + '%';
     }
 
     function renderDateSelector() {
       const container = document.getElementById('dateSelector');
-      const dates = [];
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i); dates.push(d);
-      }
-      container.innerHTML = dates.map(d => {
-        const dateStr = d.toISOString().split('T')[0];
-        const isSelected = dateStr === selectedDate;
-        const dayName = ['日', '一', '二', '三', '四', '五', '六'][d.getDay()];
-        return `<button class="date-btn ${isSelected ? 'active' : ''}" onclick="selectDate('${dateStr}')">${d.getMonth() + 1}/${d.getDate()} ${dayName}</button>`;
+      container.innerHTML = [6,5,4,3,2,1,0].map(i => {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        const ds = d.toISOString().split('T')[0];
+        const active = ds === selectedDate ? 'active' : '';
+        return `<button class="date-btn ${active}" onclick="selectDate('${ds}')">${d.getMonth()+1}/${d.getDate()}</button>`;
       }).join('');
       loadRecordsForDate(selectedDate);
     }
@@ -518,71 +421,63 @@
 
     function renderRecordsList() {
       const records = [];
-      allRecords.workouts.forEach(r => records.push({ ...r, type: 'workout', title: r.type, meta: `${r.duration || 0}分钟` }));
-      allRecords.meals.forEach(r => records.push({ ...r, type: 'meal', title: r.food, meta: `${r.calories || 0}kcal` }));
-      allRecords.weights.forEach(r => records.push({ ...r, type: 'weight', title: '体重', meta: `${r.weight}kg` }));
-      allRecords.water.forEach(r => records.push({ ...r, type: 'water', title: '喝水', meta: `${r.amount}ml` }));
-      
-      const container = document.getElementById('recordsList');
-      if (records.length === 0) { container.innerHTML = '<div class="empty-state"><p>暂无记录</p></div>'; return; }
-      container.innerHTML = records.map(r => `<div class="record-card"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.meta}</div></div><div class="actions"><button class="btn-icon" onclick="deleteRecord('${r.type}', ${r.id})">🗑️</button></div></div>`).join('');
+      allRecords.workouts.forEach(r => records.push({...r, type:'workout', title:r.type, meta:`${r.duration||0}分钟`}));
+      allRecords.meals.forEach(r => records.push({...r, type:'meal', title:r.food, meta:`${r.calories||0}kcal`}));
+      allRecords.weights.forEach(r => records.push({...r, type:'weight', title:'体重', meta:`${r.weight}kg`}));
+      const html = records.length ? records.map(r => `<div class="record-card"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.meta}</div></div><button class="btn-icon" onclick="deleteRecord('${r.type}',${r.id})">🗑️</button></div>`).join('') : '<div class="empty-state"><p>暂无记录</p></div>';
+      document.getElementById('recordsList').innerHTML = html;
     }
 
     function filterRecords(type) {
-      document.querySelectorAll('#recordsPage .date-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('#recordsPage .date-btn').forEach(b => b.classList.remove('active'));
       event.target.classList.add('active');
-      
       const records = [];
-      if (type === 'all' || type === 'workout') allRecords.workouts.forEach(r => records.push({ ...r, type: 'workout', title: r.type, meta: `${r.duration || 0}分钟` }));
-      if (type === 'all' || type === 'meal') allRecords.meals.forEach(r => records.push({ ...r, type: 'meal', title: r.food, meta: `${r.calories || 0}kcal` }));
-      if (type === 'all' || type === 'weight') allRecords.weights.forEach(r => records.push({ ...r, type: 'weight', title: '体重', meta: `${r.weight}kg` }));
-      
-      const container = document.getElementById('recordsList');
-      if (records.length === 0) { container.innerHTML = '<div class="empty-state"><p>暂无记录</p></div>'; }
-      else { container.innerHTML = records.map(r => `<div class="record-card"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.meta}</div></div><div class="actions"><button class="btn-icon" onclick="deleteRecord('${r.type}', ${r.id})">🗑️</button></div></div>`).join(''); }
+      if (type === 'all' || type === 'workout') allRecords.workouts.forEach(r => records.push({...r, type:'workout', title:r.type, meta:`${r.duration||0}分钟`}));
+      if (type === 'all' || type === 'meal') allRecords.meals.forEach(r => records.push({...r, type:'meal', title:r.food, meta:`${r.calories||0}kcal`}));
+      if (type === 'all' || type === 'weight') allRecords.weights.forEach(r => records.push({...r, type:'weight', title:'体重', meta:`${r.weight}kg`}));
+      document.getElementById('recordsList').innerHTML = records.length ? records.map(r => `<div class="record-card"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.meta}</div></div><button class="btn-icon" onclick="deleteRecord('${r.type}',${r.id})">🗑️</button></div>`).join('') : '<div class="empty-state"><p>暂无记录</p></div>';
     }
 
     function selectDate(date) { loadRecordsForDate(date); }
 
-    // 记录操作
     function openModal(type) {
       currentModalType = type;
-      const titles = { workout: '添加健身', meal: '添加饮食', weight: '记录体重', water: '记录喝水' };
+      const titles = {workout:'添加健身',meal:'添加饮食',weight:'记录体重',water:'记录喝水'};
       document.getElementById('modalTitle').textContent = titles[type];
-      document.getElementById('workoutFields').style.display = type === 'workout' ? 'block' : 'none';
-      document.getElementById('mealFields').style.display = type === 'meal' ? 'block' : 'none';
-      document.getElementById('weightFields').style.display = type === 'weight' ? 'block' : 'none';
-      document.getElementById('waterFields').style.display = type === 'water' ? 'block' : 'none';
+      document.getElementById('workoutFields').style.display = type==='workout'?'block':'none';
+      document.getElementById('mealFields').style.display = type==='meal'?'block':'none';
+      document.getElementById('weightFields').style.display = type==='weight'?'block':'none';
+      document.getElementById('waterFields').style.display = type==='water'?'block':'none';
       document.getElementById('recordModal').classList.add('active');
     }
 
     function closeModal() { document.getElementById('recordModal').classList.remove('active'); document.getElementById('recordForm').reset(); }
 
-    async function handleRecordSubmit(e) {
+    function handleRecordSubmit(e) {
       e.preventDefault();
       const date = document.getElementById('recordDate').value;
       const id = Date.now();
       let record = { id, date };
       
       if (currentModalType === 'workout') {
-        record = { ...record, type: document.getElementById('workoutType').value, duration: parseInt(document.getElementById('workoutDuration').value) || 0, weight: parseFloat(document.getElementById('workoutWeight').value) || 0, sets: parseInt(document.getElementById('workoutSets').value) || 0, reps: parseInt(document.getElementById('workoutReps').value) || 0, notes: document.getElementById('workoutNotes').value };
+        record = {...record, type:document.getElementById('workoutType').value, duration:parseInt(document.getElementById('workoutDuration').value)||0, weight:parseFloat(document.getElementById('workoutWeight').value)||0, sets:parseInt(document.getElementById('workoutSets').value)||0, reps:parseInt(document.getElementById('workoutReps').value)||0};
         userData.workouts = userData.workouts || [];
         userData.workouts.push(record);
       } else if (currentModalType === 'meal') {
-        record = { ...record, type: document.getElementById('mealType').value, food: document.getElementById('mealFood').value, calories: parseInt(document.getElementById('mealCalories').value) || 0, protein: parseFloat(document.getElementById('mealProtein').value) || 0, carbs: parseFloat(document.getElementById('mealCarbs').value) || 0, fat: parseFloat(document.getElementById('mealFat').value) || 0 };
+        record = {...record, type:document.getElementById('mealType').value, food:document.getElementById('mealFood').value, calories:parseInt(document.getElementById('mealCalories').value)||0, protein:parseFloat(document.getElementById('mealProtein').value)||0};
         userData.meals = userData.meals || [];
         userData.meals.push(record);
       } else if (currentModalType === 'weight') {
-        record = { ...record, weight: parseFloat(document.getElementById('weightValue').value) };
+        record = {...record, weight:parseFloat(document.getElementById('weightValue').value)};
         userData.weights = userData.weights || [];
         userData.weights.push(record);
       } else if (currentModalType === 'water') {
-        record = { ...record, amount: parseInt(document.getElementById('waterAmount').value) };
+        record = {...record, amount:parseInt(document.getElementById('waterAmount').value)};
         userData.water = userData.water || [];
         userData.water.push(record);
       }
       
-      await saveData();
+      saveData();
       showToast('记录已保存', 'success');
       closeModal();
       loadTodayData();
@@ -590,24 +485,23 @@
       loadAllStats();
     }
 
-    async function addWater(amount) {
+    function addWater(amount) {
       const date = new Date().toISOString().split('T')[0];
-      const record = { id: Date.now(), date, amount };
       userData.water = userData.water || [];
-      userData.water.push(record);
-      await saveData();
+      userData.water.push({ id: Date.now(), date, amount });
+      saveData();
       showToast(`已添加 ${amount}ml`, 'success');
       loadTodayData();
       loadWeekStats();
     }
 
     async function deleteRecord(type, id) {
-      if (!confirm('确定删除这条记录吗？')) return;
+      if (!confirm('确定删除？')) return;
       if (type === 'workout') userData.workouts = userData.workouts.filter(r => r.id !== id);
       else if (type === 'meal') userData.meals = userData.meals.filter(r => r.id !== id);
       else if (type === 'weight') userData.weights = userData.weights.filter(r => r.id !== id);
       else if (type === 'water') userData.water = userData.water.filter(r => r.id !== id);
-      await saveData();
+      saveData();
       showToast('已删除', 'success');
       loadTodayData();
       loadWeekStats();
@@ -615,47 +509,43 @@
       if (currentPage === 'records') loadRecordsForDate(selectedDate);
     }
 
-    // 目标设置
     function openGoalModal(type) {
       currentGoalType = type;
-      const titles = { water: '每日饮水目标', calorie: '每日卡路里目标' };
-      const labels = { water: '目标饮水量 (ml)', calorie: '目标卡路里 (kcal)' };
+      const titles = {water:'每日饮水目标',calorie:'每日卡路里目标'};
       document.getElementById('goalTitle').textContent = titles[type];
-      document.getElementById('goalLabel').textContent = labels[type];
       document.getElementById('goalValue').value = type === 'water' ? settings.daily_water_goal : settings.daily_calorie_goal;
       document.getElementById('goalModal').classList.add('active');
     }
 
     function closeGoalModal() { document.getElementById('goalModal').classList.remove('active'); }
 
-    async function handleGoalSubmit(e) {
+    function handleGoalSubmit(e) {
       e.preventDefault();
       const value = parseInt(document.getElementById('goalValue').value);
       if (currentGoalType === 'water') { settings.daily_water_goal = value; document.getElementById('waterGoalValue').textContent = value + 'ml'; }
       else { settings.daily_calorie_goal = value; document.getElementById('calorieGoalValue').textContent = value + 'kcal'; }
       userData.settings = settings;
-      await saveData();
+      saveData();
       showToast('目标已更新', 'success');
       closeGoalModal();
       loadTodayData();
     }
 
-    // 主题
     function setTheme(theme) {
       applyTheme(theme);
       settings.theme = theme;
       userData.settings = settings;
       saveData();
-      document.querySelectorAll('.theme-option').forEach(opt => { opt.classList.toggle('active', opt.dataset.theme === theme); });
+      document.querySelectorAll('.theme-option').forEach(o => o.classList.toggle('active', o.dataset.theme === theme));
     }
 
-    function applyTheme(theme) { document.body.className = `theme-${theme}`; }
+    function applyTheme(theme) { document.body.className = 'theme-' + theme; }
 
-    function showToast(message, type = '') {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.className = `toast ${type} show`;
-      setTimeout(() => toast.classList.remove('show'), 2500);
+    function showToast(msg, type='') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast ' + type + ' show';
+      setTimeout(() => t.classList.remove('show'), 2500);
     }
   </script>
 </body>
