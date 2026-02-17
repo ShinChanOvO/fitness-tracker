@@ -1,0 +1,6 @@
+[build]
+builder = "nixpacks"
+buildCommand = "npm install --ignore-scripts"
+
+[deploy]
+startCommand = "node server.js"
