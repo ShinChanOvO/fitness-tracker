@@ -353,8 +353,10 @@ app.get('/', (req, res) => {
 // Vercel handler
 module.exports = app;
 
-// Railway 监听
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Railway 监听 (只在直接运行 node server.js 时执行)
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
