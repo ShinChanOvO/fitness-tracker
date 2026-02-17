@@ -1,24 +1,8 @@
 {
   "name": "fitness-tracker",
   "version": "1.0.0",
-  "description": "健身追踪器 - 记录你的健身、饮食、体重和饮水",
-  "main": "server.js",
+  "description": "健身追踪器",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
-  },
-  "keywords": ["fitness", "tracker", "workout"],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "bcryptjs": "^3.0.3",
-    "body-parser": "^2.2.2",
-    "cors": "^2.8.6",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "sqlite3": "^5.1.7"
-  },
-  "engines": {
-    "node": ">=18.0.0"
+    "start": "npx serve public"
   }
 }
