@@ -203,35 +203,11 @@
   </div>
   <div class="toast" id="toast"></div>
 
-  <!-- Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    // ========== Firebase 配置 ==========
-    // TODO: 请替换为你的 Firebase 配置
-    // 1. 去 https://console.firebase.google.com/ 创建一个项目
-    // 2. 开启 "Authentication" - 邮箱/密码登录
-    // 3. 开启 "Realtime Database" - 创建数据库（选测试模式或锁定模式）
-    // 4. 把项目设置里的配置复制下来
-    const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-      projectId: "YOUR_PROJECT",
-      storageBucket: "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
-    };
-
-    // 初始化 Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-
-    // 全局变量
-    let currentUser = null;
+  <script>
+    // 后端 API 地址 - 部署后替换为你的 Railway URL
+    const API_BASE = '';
+    
+    let token = localStorage.getItem('token');
     let userData = null;
     let settings = { theme: 'dark', daily_water_goal: 2000, daily_calorie_goal: 2000 };
     let currentPage = 'home';
@@ -240,85 +216,113 @@
     let selectedDate = new Date().toISOString().split('T')[0];
     let allRecords = { workouts: [], meals: [], weights: [], water: [] };
 
-    // 监听登录状态
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        currentUser = user;
-        await loadUserData();
-        showMainApp();
+    // API 调用
+    async function apiCall(endpoint, options = {}) {
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const res = await fetch(API_BASE + endpoint, { ...options, headers });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || '请求失败');
+      return data;
+    }
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (token) {
+        try {
+          await loadUserData();
+          showMainApp();
+        } catch(e) {
+          localStorage.removeItem('token');
+          token = null;
+          showAuthPage();
+        }
       } else {
         showAuthPage();
       }
+      setupEvents();
     });
 
-    // 加载用户数据
-    async function loadUserData() {
-      try {
-        const snapshot = await get(ref(db, 'users/' + currentUser.uid));
-        if (snapshot.exists()) {
-          userData = snapshot.val();
-          settings = userData.settings || { theme: 'dark', daily_water_goal: 2000, daily_calorie_goal: 2000 };
-          applyTheme(settings.theme);
-          loadTodayData();
-          loadWeekStats();
-          loadAllStats();
-        } else {
-          // 新用户，创建初始数据
-          userData = {
-            workouts: {}, meals: {}, weights: {}, water: {},
-            settings: settings
-          };
-          await set(ref(db, 'users/' + currentUser.uid), userData);
-        }
-      } catch(e) {
-        console.error('加载数据失败', e);
-        showToast('加载数据失败: ' + e.message, 'error');
-      }
+    function setupEvents() {
+      document.getElementById('loginForm').addEventListener('submit', handleLogin);
+      document.getElementById('registerForm').addEventListener('submit', handleRegister);
+      document.getElementById('recordForm').addEventListener('submit', handleRecordSubmit);
+      document.getElementById('goalForm').addEventListener('submit', handleGoalSubmit);
+      document.getElementById('showRegister').addEventListener('click', e => { e.preventDefault(); document.getElementById('authPage').style.display = 'none'; document.getElementById('registerPage').style.display = 'flex'; });
+      document.getElementById('showLogin').addEventListener('click', e => { e.preventDefault(); document.getElementById('registerPage').style.display = 'none'; document.getElementById('authPage').style.display = 'flex'; });
+      document.getElementById('recordModal').addEventListener('click', e => { if (e.target.id === 'recordModal') closeModal(); });
+      document.getElementById('recordDate').value = selectedDate;
     }
 
-    // 保存数据
-    async function saveData() {
-      if (!currentUser || !userData) return;
-      try {
-        await update(ref(db, 'users/' + currentUser.uid), userData);
-      } catch(e) {
-        console.error('保存失败', e);
-      }
-    }
-
-    // 注册
-    window.handleRegister = async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('registerEmail').value;
-      const password = document.getElementById('registerPassword').value;
-      try {
-        await createUserWithEmailAndPassword(auth, email, password);
-        showToast('注册成功！', 'success');
-      } catch(e) {
-        showToast(e.message, 'error');
-      }
-    };
-
-    // 登录
-    window.handleLogin = async (e) => {
+    // 登录/注册
+    async function handleLogin(e) {
       e.preventDefault();
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
       try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch(e) {
-        showToast(e.message, 'error');
-      }
-    };
+        const data = await apiCall('/api/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+        token = data.token;
+        localStorage.setItem('token', token);
+        await loadUserData();
+        showMainApp();
+      } catch(e) { showToast(e.message, 'error'); }
+    }
 
-    // 退出
-    window.logout = async () => {
-      await signOut(auth);
+    async function handleRegister(e) {
+      e.preventDefault();
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      try {
+        const data = await apiCall('/api/register', { method: 'POST', body: JSON.stringify({ email, password }) });
+        token = data.token;
+        localStorage.setItem('token', token);
+        await loadUserData();
+        showMainApp();
+        showToast('注册成功！', 'success');
+      } catch(e) { showToast(e.message, 'error'); }
+    }
+
+    async function loadUserData() {
+      const [settingsData, workouts, meals, weights, water] = await Promise.all([
+        apiCall('/api/settings'),
+        apiCall('/api/workouts'),
+        apiCall('/api/meals'),
+        apiCall('/api/weights'),
+        apiCall('/api/water')
+      ]);
+      settings = settingsData || { theme: 'dark', daily_water_goal: 2000, daily_calorie_goal: 2000 };
+      userData = { workouts, meals, weights, water };
+      applyTheme(settings.theme);
+      loadTodayData();
+      loadWeekStats();
+      loadAllStats();
+    }
+
+    async function saveData() {
+      // 设置在每个操作中单独保存
+    }
+
+    function logout() {
+      localStorage.removeItem('token');
+      token = null;
       userData = null;
       location.reload();
-    };
+    }
 
-    // 页面导航
+    function showAuthPage() {
+      document.getElementById('authPage').style.display = 'flex';
+      document.getElementById('registerPage').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'none';
+    }
+
+    function showMainApp() {
+      document.getElementById('authPage').style.display = 'none';
+      document.getElementById('registerPage').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'block';
+      document.getElementById('waterGoal').textContent = settings.daily_water_goal + 'ml';
+      document.getElementById('calGoal').textContent = settings.daily_calorie_goal + 'kcal';
+    }
+
     window.navigate = (page) => {
       currentPage = page;
       document.querySelectorAll('.nav-item').forEach((el, i) => {
@@ -329,13 +333,12 @@
       if (page === 'records') renderDateSelector();
     };
 
-    // 加载今日数据
     function loadTodayData() {
       const date = new Date().toISOString().split('T')[0];
-      allRecords.workouts = Object.values(userData.workouts || {}).filter(r => r.date === date);
-      allRecords.meals = Object.values(userData.meals || {}).filter(r => r.date === date);
-      allRecords.weights = Object.values(userData.weights || {}).filter(r => r.date === date);
-      allRecords.water = Object.values(userData.water || {}).filter(r => r.date === date);
+      allRecords.workouts = (userData.workouts || []).filter(r => r.date === date);
+      allRecords.meals = (userData.meals || []).filter(r => r.date === date);
+      allRecords.weights = (userData.weights || []).filter(r => r.date === date);
+      allRecords.water = (userData.water || []).filter(r => r.date === date);
       renderTodayRecords();
       renderWaterProgress();
     }
@@ -344,24 +347,22 @@
       const today = new Date();
       const weekAgo = new Date(today.getTime() - 7*24*60*60*1000).toISOString().split('T')[0];
       const todayStr = today.toISOString().split('T')[0];
-      const workouts = Object.values(userData.workouts || {}).filter(r => r.date >= weekAgo && r.date <= todayStr);
-      const meals = Object.values(userData.meals || {}).filter(r => r.date >= weekAgo && r.date <= todayStr);
-      const water = Object.values(userData.water || {}).filter(r => r.date >= weekAgo && r.date <= todayStr);
-      const weights = Object.values(userData.weights || {}).filter(r => r.date >= weekAgo && r.date <= todayStr);
+      const workouts = (userData.workouts || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
+      const meals = (userData.meals || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
+      const water = (userData.water || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
+      const weights = (userData.weights || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
       
       document.getElementById('weekWorkouts').textContent = workouts.length;
       document.getElementById('weekCalories').textContent = meals.reduce((s,m) => s + (m.calories||0), 0);
       document.getElementById('weekWater').textContent = water.reduce((s,w) => s + w.amount, 0);
-      if (weights.length) {
-        document.getElementById('weekWeight').textContent = (weights.reduce((s,w) => s + w.weight, 0) / weights.length).toFixed(1) + 'kg';
-      }
+      if (weights.length) document.getElementById('weekWeight').textContent = (weights.reduce((s,w) => s + w.weight, 0) / weights.length).toFixed(1) + 'kg';
     }
 
     function loadAllStats() {
-      const workouts = Object.values(userData.workouts || {});
-      const meals = Object.values(userData.meals || {});
-      const water = Object.values(userData.water || {});
-      const weights = Object.values(userData.weights || {});
+      const workouts = userData.workouts || [];
+      const meals = userData.meals || [];
+      const water = userData.water || [];
+      const weights = userData.weights || [];
       
       document.getElementById('totalWorkouts').textContent = workouts.length;
       document.getElementById('totalCalories').textContent = meals.reduce((s,m) => s + (m.calories||0), 0);
@@ -383,14 +384,11 @@
       allRecords.weights.forEach(r => records.push({...r, type:'weight', title:'体重', meta:`${r.weight}kg`}));
       allRecords.water.forEach(r => records.push({...r, type:'water', title:'喝水', meta:`${r.amount}ml`}));
       
-      if (!records.length) {
-        document.getElementById('todayRecords').innerHTML = '<div class="empty">今天还没有记录</div>';
-        return;
-      }
+      if (!records.length) { document.getElementById('todayRecords').innerHTML = '<div class="empty">今天还没有记录</div>'; return; }
       document.getElementById('todayRecords').innerHTML = records.map(r => 
         `<div class="card" style="display:flex;justify-content:space-between;align-items:center">
           <div><div style="font-weight:600">${r.title}</div><div style="font-size:13px;color:var(--text2)">${r.meta}</div></div>
-          <button onclick="deleteRecord('${r.type}','${r.id}')" style="background:none;border:none;font-size:20px;cursor:pointer">🗑️</button>
+          <button onclick="deleteRecord('${r.type}',${r.id})" style="background:none;border:none;font-size:20px;cursor:pointer">🗑️</button>
         </div>`
       ).join('');
     }
@@ -413,12 +411,15 @@
       loadRecordsForDate(selectedDate);
     }
 
-    function loadRecordsForDate(date) {
+    async function loadRecordsForDate(date) {
       selectedDate = date;
-      allRecords.workouts = Object.values(userData.workouts || {}).filter(r => r.date === date);
-      allRecords.meals = Object.values(userData.meals || {}).filter(r => r.date === date);
-      allRecords.weights = Object.values(userData.weights || {}).filter(r => r.date === date);
-      allRecords.water = Object.values(userData.water || {}).filter(r => r.date === date);
+      const [workouts, meals, weights, water] = await Promise.all([
+        apiCall(`/api/workouts?startDate=${date}&endDate=${date}`),
+        apiCall(`/api/meals?startDate=${date}&endDate=${date}`),
+        apiCall(`/api/weights?startDate=${date}&endDate=${date}`),
+        apiCall(`/api/water?startDate=${date}&endDate=${date}`)
+      ]);
+      allRecords = { workouts: workouts || [], meals: meals || [], weights: weights || [], water: water || [] };
       renderRecordsList();
     }
 
@@ -428,14 +429,11 @@
       allRecords.meals.forEach(r => records.push({...r, type:'meal', title:r.food, meta:`${r.calories||0}kcal`}));
       allRecords.weights.forEach(r => records.push({...r, type:'weight', title:'体重', meta:`${r.weight}kg`}));
       
-      if (!records.length) {
-        document.getElementById('recordsList').innerHTML = '<div class="empty">暂无记录</div>';
-        return;
-      }
+      if (!records.length) { document.getElementById('recordsList').innerHTML = '<div class="empty">暂无记录</div>'; return; }
       document.getElementById('recordsList').innerHTML = records.map(r => 
         `<div class="card" style="display:flex;justify-content:space-between;align-items:center">
           <div><div style="font-weight:600">${r.title}</div><div style="font-size:13px;color:var(--text2)">${r.meta}</div></div>
-          <button onclick="deleteRecord('${r.type}','${r.id}')" style="background:none;border:none;font-size:20px;cursor:pointer">🗑️</button>
+          <button onclick="deleteRecord('${r.type}',${r.id})" style="background:none;border:none;font-size:20px;cursor:pointer">🗑️</button>
         </div>`
       ).join('');
     }
@@ -446,14 +444,11 @@
       if (type === 'all' || type === 'meal') allRecords.meals.forEach(r => records.push({...r, type:'meal', title:r.food, meta:`${r.calories||0}kcal`}));
       if (type === 'all' || type === 'weight') allRecords.weights.forEach(r => records.push({...r, type:'weight', title:'体重', meta:`${r.weight}kg`}));
       
-      if (!records.length) {
-        document.getElementById('recordsList').innerHTML = '<div class="empty">暂无记录</div>';
-        return;
-      }
+      if (!records.length) { document.getElementById('recordsList').innerHTML = '<div class="empty">暂无记录</div>'; return; }
       document.getElementById('recordsList').innerHTML = records.map(r => 
         `<div class="card" style="display:flex;justify-content:space-between;align-items:center">
           <div><div style="font-weight:600">${r.title}</div><div style="font-size:13px;color:var(--text2)">${r.meta}</div></div>
-          <button onclick="deleteRecord('${r.type}','${r.id}')" style="background:none;border:none;font-size:20px;cursor:pointer">🗑️</button>
+          <button onclick="deleteRecord('${r.type}',${r.id})" style="background:none;border:none;font-size:20px;cursor:pointer">🗑️</button>
         </div>`
       ).join('');
     };
@@ -472,66 +467,65 @@
       document.getElementById('recordModal').classList.add('active');
     };
 
-    window.closeModal = () => {
-      document.getElementById('recordModal').classList.remove('active');
-      document.getElementById('recordForm').reset();
-    };
+    window.closeModal = () => { document.getElementById('recordModal').classList.remove('active'); document.getElementById('recordForm').reset(); };
 
     window.handleRecordSubmit = async (e) => {
       e.preventDefault();
       const date = document.getElementById('recordDate').value;
-      const id = Date.now().toString();
-      let record = { id, date };
       
-      if (currentModal === 'workout') {
-        record = {...record, type:document.getElementById('workoutType').value, duration:parseInt(document.getElementById('workoutDuration').value)||0, weight:parseFloat(document.getElementById('workoutWeight').value)||0};
-        userData.workouts = userData.workouts || {};
-        userData.workouts[id] = record;
-      } else if (currentModal === 'meal') {
-        record = {...record, type:document.getElementById('mealType').value, food:document.getElementById('mealFood').value, calories:parseInt(document.getElementById('mealCalories').value)||0, protein:parseFloat(document.getElementById('mealProtein').value)||0};
-        userData.meals = userData.meals || {};
-        userData.meals[id] = record;
-      } else if (currentModal === 'weight') {
-        record = {...record, weight:parseFloat(document.getElementById('weightValue').value)};
-        userData.weights = userData.weights || {};
-        userData.weights[id] = record;
-      } else if (currentModal === 'water') {
-        record = {...record, amount:parseInt(document.getElementById('waterAmount').value)};
-        userData.water = userData.water || {};
-        userData.water[id] = record;
-      }
-      
-      await saveData();
-      showToast('记录已保存', 'success');
-      closeModal();
-      loadTodayData();
-      loadWeekStats();
-      loadAllStats();
+      try {
+        if (currentModal === 'workout') {
+          await apiCall('/api/workouts', { method: 'POST', body: JSON.stringify({
+            type: document.getElementById('workoutType').value,
+            duration: parseInt(document.getElementById('workoutDuration').value) || 0,
+            weight: parseFloat(document.getElementById('workoutWeight').value) || 0,
+            sets: parseInt(document.getElementById('workoutSets').value) || 0,
+            reps: parseInt(document.getElementById('workoutReps').value) || 0,
+            date
+          })});
+        } else if (currentModal === 'meal') {
+          await apiCall('/api/meals', { method: 'POST', body: JSON.stringify({
+            type: document.getElementById('mealType').value,
+            food: document.getElementById('mealFood').value,
+            calories: parseInt(document.getElementById('mealCalories').value) || 0,
+            protein: parseFloat(document.getElementById('mealProtein').value) || 0,
+            date
+          })});
+        } else if (currentModal === 'weight') {
+          await apiCall('/api/weights', { method: 'POST', body: JSON.stringify({
+            weight: parseFloat(document.getElementById('weightValue').value),
+            date
+          })});
+        } else if (currentModal === 'water') {
+          await apiCall('/api/water', { method: 'POST', body: JSON.stringify({
+            amount: parseInt(document.getElementById('waterAmount').value),
+            date
+          })});
+        }
+        
+        showToast('记录已保存', 'success');
+        closeModal();
+        await loadUserData();
+      } catch(e) { showToast(e.message, 'error'); }
     };
 
     window.addWater = async (amount) => {
       const date = new Date().toISOString().split('T')[0];
-      const id = Date.now().toString();
-      userData.water = userData.water || {};
-      userData.water[id] = { id, date, amount };
-      await saveData();
-      showToast(`已添加 ${amount}ml`, 'success');
-      loadTodayData();
-      loadWeekStats();
+      try {
+        await apiCall('/api/water', { method: 'POST', body: JSON.stringify({ amount, date }) });
+        showToast(`已添加 ${amount}ml`, 'success');
+        await loadUserData();
+      } catch(e) { showToast(e.message, 'error'); }
     };
 
     window.deleteRecord = async (type, id) => {
       if (!confirm('确定删除？')) return;
-      if (type === 'workout' && userData.workouts) delete userData.workouts[id];
-      else if (type === 'meal' && userData.meals) delete userData.meals[id];
-      else if (type === 'weight' && userData.weights) delete userData.weights[id];
-      else if (type === 'water' && userData.water) delete userData.water[id];
-      await saveData();
-      showToast('已删除', 'success');
-      loadTodayData();
-      loadWeekStats();
-      loadAllStats();
-      if (currentPage === 'records') loadRecordsForDate(selectedDate);
+      try {
+        await apiCall(`/api/${type}/${id}`, { method: 'DELETE' });
+        showToast('已删除', 'success');
+        await loadUserData();
+        if (currentPage === 'records') loadRecordsForDate(selectedDate);
+      } catch(e) { showToast(e.message, 'error'); }
     };
 
     window.openGoal = (type) => {
@@ -545,26 +539,29 @@
     window.handleGoalSubmit = async (e) => {
       e.preventDefault();
       const value = parseInt(document.getElementById('goalValue').value);
-      if (currentGoalType === 'water') {
-        settings.daily_water_goal = value;
-        document.getElementById('waterGoal').textContent = value + 'ml';
-      } else {
-        settings.daily_calorie_goal = value;
-        document.getElementById('calGoal').textContent = value + 'kcal';
-      }
-      userData.settings = settings;
-      await saveData();
-      showToast('目标已更新', 'success');
-      document.getElementById('goalModal').classList.remove('active');
-      loadTodayData();
+      try {
+        const newSettings = { ...settings };
+        if (currentGoalType === 'water') {
+          newSettings.daily_water_goal = value;
+          document.getElementById('waterGoal').textContent = value + 'ml';
+        } else {
+          newSettings.daily_calorie_goal = value;
+          document.getElementById('calGoal').textContent = value + 'kcal';
+        }
+        await apiCall('/api/settings', { method: 'PUT', body: JSON.stringify(newSettings) });
+        settings = newSettings;
+        showToast('目标已更新', 'success');
+        document.getElementById('goalModal').classList.remove('active');
+        loadTodayData();
+      } catch(e) { showToast(e.message, 'error'); }
     };
 
     window.setTheme = async (theme) => {
-      settings.theme = theme;
-      userData.settings = settings;
-      await saveData();
-      applyTheme(theme);
-      document.querySelectorAll('.theme-opt').forEach(o => o.classList.toggle('active', o.textContent.includes({'dark':'🌙','light':'☀️','ocean':'🌊','sunset':'🌅'}[theme])));
+      try {
+        settings.theme = theme;
+        await apiCall('/api/settings', { method: 'PUT', body: JSON.stringify(settings) });
+        applyTheme(theme);
+      } catch(e) { showToast(e.message, 'error'); }
     };
 
     function applyTheme(theme) {
@@ -573,35 +570,12 @@
       document.querySelectorAll('.theme-opt').forEach(o => o.classList.toggle('active', o.textContent === icons[theme]));
     }
 
-    function showAuthPage() {
-      document.getElementById('authPage').style.display = 'flex';
-      document.getElementById('registerPage').style.display = 'none';
-      document.getElementById('mainApp').style.display = 'none';
-    }
-
-    function showMainApp() {
-      document.getElementById('authPage').style.display = 'none';
-      document.getElementById('registerPage').style.display = 'none';
-      document.getElementById('mainApp').style.display = 'block';
-      document.getElementById('waterGoal').textContent = settings.daily_water_goal + 'ml';
-      document.getElementById('calGoal').textContent = settings.daily_calorie_goal + 'kcal';
-    }
-
     function showToast(msg, type='') {
       const t = document.getElementById('toast');
       t.textContent = msg;
       t.className = 'toast ' + type + ' show';
       setTimeout(() => t.classList.remove('show'), 2500);
     }
-
-    // 事件监听
-    document.getElementById('registerForm').addEventListener('submit', handleRegister);
-    document.getElementById('loginForm').addEventListener('submit', handleLogin);
-    document.getElementById('recordForm').addEventListener('submit', handleRecordSubmit);
-    document.getElementById('goalForm').addEventListener('submit', handleGoalSubmit);
-    document.getElementById('showRegister').addEventListener('click', e => { e.preventDefault(); document.getElementById('authPage').style.display = 'none'; document.getElementById('registerPage').style.display = 'flex'; });
-    document.getElementById('showLogin').addEventListener('click', e => { e.preventDefault(); document.getElementById('registerPage').style.display = 'none'; document.getElementById('authPage').style.display = 'flex'; });
-    document.getElementById('recordModal').addEventListener('click', e => { if (e.target.id === 'recordModal') closeModal(); });
   </script>
 </body>
 </html>
