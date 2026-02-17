@@ -1,9 +1,0 @@
-[build]
-builder = "nixpacks"
-buildCommand = "npm install"
-
-[nixpacks]
-nodeVersion = "20"
-
-[deploy]
-startCommand = "node server.js"
