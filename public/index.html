@@ -1182,8 +1182,8 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    // 后端API地址 - 部署时请修改为你的后端地址
-const API_BASE = process.env.API_BASE || '';
+    // 后端API地址 - Vercel部署时为空即可（同一域名）
+const API_BASE = '';
     let token = localStorage.getItem('token');
     let currentPage = 'home';
     let currentModalType = '';
