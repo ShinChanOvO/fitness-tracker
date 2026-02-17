@@ -5,347 +5,337 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>健身追踪器</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root { --bg-primary: #0f0f0f; --bg-secondary: #1a1a1a; --bg-tertiary: #252525; --text-primary: #ffffff; --text-secondary: #a0a0a0; --text-muted: #666666; --accent: #00d4aa; --accent-glow: rgba(0, 212, 170, 0.3); --danger: #ff6b6b; --success: #6bcb77; --card-bg: rgba(255, 255, 255, 0.03); --border: rgba(255, 255, 255, 0.08); }
-    .theme-light { --bg-primary: #f5f5f7; --bg-secondary: #ffffff; --bg-tertiary: #e8e8ed; --text-primary: #1d1d1f; --text-secondary: #6e6e73; --accent: #00a884; --card-bg: rgba(255,255,255,0.8); --border: rgba(0,0,0,0.08); }
-    .theme-ocean { --bg-primary: #0a1628; --bg-secondary: #112240; --bg-tertiary: #1a3152; --accent: #64ffda; --accent-glow: rgba(100,255,218,0.25); --card-bg: rgba(100,255,218,0.05); --border: rgba(100,255,218,0.15); }
-    .theme-sunset { --bg-primary: #1a0a0a; --bg-secondary: #2d1515; --bg-tertiary: #3d1f1f; --accent: #ff6b6b; --accent-glow: rgba(255,107,107,0.25); --card-bg: rgba(255,107,107,0.05); --border: rgba(255,107,107,0.15); }
+    :root { --bg: #0f0f0f; --bg2: #1a1a1a; --bg3: #252525; --text: #fff; --text2: #a0a0a0; --accent: #00d4aa; --danger: #ff6b6b; --success: #6bcb77; --card: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.08); }
+    .theme-light { --bg: #f5f5f7; --bg2: #fff; --bg3: #e8e8ed; --text: #1d1d1f; --text2: #6e6e73; --accent: #00a884; --card: rgba(255,255,255,0.8); --border: rgba(0,0,0,0.08); }
+    .theme-ocean { --bg: #0a1628; --bg2: #112240; --bg3: #1a3152; --accent: #64ffda; --card: rgba(100,255,218,0.05); --border: rgba(100,255,218,0.15); }
+    .theme-sunset { --bg: #1a0a0a; --bg2: #2d1515; --bg3: #3d1f1f; --accent: #ff6b6b; --card: rgba(255,107,107,0.05); --border: rgba(255,107,107,0.15); }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; transition: 0.3s; -webkit-tap-highlight-color: transparent; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: 0.3s; }
     .app { max-width: 480px; margin: 0 auto; min-height: 100vh; }
-    .auth-page { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 24px; background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary)); }
-    .auth-logo { text-align: center; margin-bottom: 40px; }
-    .auth-logo svg { width: 80px; height: 80px; }
-    .auth-logo h1 { font-size: 28px; font-weight: 700; background: linear-gradient(135deg, var(--accent), #00ffcc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .auth-logo p { color: var(--text-secondary); margin-top: 8px; }
-    .auth-form { display: flex; flex-direction: column; gap: 16px; }
-    .input-group input { width: 100%; padding: 16px 20px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 16px; outline: none; }
-    .input-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-    .btn { padding: 16px 24px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-    .btn-primary { background: var(--accent); color: var(--bg-primary); }
-    .btn-block { width: 100%; }
-    .auth-switch { text-align: center; margin-top: 24px; color: var(--text-secondary); }
-    .auth-switch a { color: var(--accent); text-decoration: none; font-weight: 500; }
-    .main-app { display: none; }
-    .header { position: sticky; top: 0; background: var(--bg-primary); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; backdrop-filter: blur(12px); }
-    .header h1 { font-size: 20px; font-weight: 600; }
-    .icon-btn { width: 40px; height: 40px; border-radius: 10px; background: var(--bg-tertiary); border: none; color: var(--text-primary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-secondary); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; padding-bottom: calc(8px + env(safe-area-inset-bottom)); z-index: 100; }
-    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; color: var(--text-muted); text-decoration: none; font-size: 11px; font-weight: 500; }
-    .nav-item.active { color: var(--accent); }
-    .nav-item svg { width: 24px; height: 24px; }
     .page { display: none; padding: 20px; padding-bottom: 100px; }
     .page.active { display: block; }
+    .auth-page { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 24px; background: linear-gradient(135deg, var(--bg), var(--bg2)); }
+    .logo { text-align: center; margin-bottom: 40px; }
+    .logo h1 { font-size: 28px; background: linear-gradient(135deg, var(--accent), #00ffcc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .logo p { color: var(--text2); margin-top: 8px; }
+    .form { display: flex; flex-direction: column; gap: 16px; }
+    .form input { width: 100%; padding: 16px; background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 16px; outline: none; }
+    .form input:focus { border-color: var(--accent); }
+    .btn { padding: 16px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; background: var(--accent); color: var(--bg); }
+    .switch { text-align: center; margin-top: 20px; color: var(--text2); }
+    .switch a { color: var(--accent); text-decoration: none; }
+    .header { position: sticky; top: 0; background: var(--bg); padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 100; backdrop-filter: blur(12px); }
+    .nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg2); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0; padding-bottom: calc(8px + env(safe-area-inset-bottom)); z-index: 100; }
+    .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; color: var(--text2); font-size: 11px; }
+    .nav-item.active { color: var(--accent); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 12px; }
     .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
-    .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
     .stat-card .icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; font-size: 20px; }
-    .stat-card .value { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
-    .stat-card .label { font-size: 13px; color: var(--text-secondary); }
-    .record-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .record-card .info { flex: 1; }
-    .record-card .title { font-weight: 600; margin-bottom: 4px; }
-    .record-card .meta { font-size: 13px; color: var(--text-secondary); }
-    .record-card .btn-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--bg-tertiary); border: none; color: var(--text-secondary); cursor: pointer; }
+    .stat-card .value { font-size: 24px; font-weight: 700; }
+    .stat-card .label { font-size: 13px; color: var(--text2); }
     .quick-add { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 24px; }
-    .quick-add-btn { aspect-ratio: 1; border-radius: 16px; background: var(--card-bg); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
-    .quick-add-btn:hover { border-color: var(--accent); transform: scale(1.05); }
-    .quick-add-btn span { font-size: 24px; }
-    .quick-add-btn label { font-size: 10px; color: var(--text-secondary); }
-    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: none; align-items: flex-end; justify-content: center; z-index: 200; }
-    .modal-overlay.active { display: flex; }
-    .modal { width: 100%; max-width: 480px; background: var(--bg-secondary); border-radius: 24px 24px 0 0; padding: 24px; animation: slideUp 0.3s; }
-    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .modal-header h2 { font-size: 20px; }
-    .modal-close { width: 32px; height: 32px; border-radius: 8px; background: var(--bg-tertiary); border: none; color: var(--text-primary); cursor: pointer; }
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
-    .form-group input, .form-group select { width: 100%; padding: 14px 16px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 12px; color: var(--text-primary); font-size: 16px; outline: none; }
-    .form-group input:focus { border-color: var(--accent); }
-    .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .water-progress { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 24px; }
-    .water-header { display: flex; justify-content: space-between; margin-bottom: 16px; }
-    .water-header h3 { font-size: 16px; }
-    .water-progress-bar { height: 12px; background: var(--bg-tertiary); border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
-    .water-progress-fill { height: 100%; background: linear-gradient(90deg, #00d4aa, #00ffcc); border-radius: 6px; transition: width 0.3s; }
-    .water-controls { display: flex; gap: 8px; margin-top: 16px; }
-    .water-btn { flex: 1; padding: 12px; border-radius: 10px; background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-primary); font-size: 14px; cursor: pointer; }
-    .water-btn:hover { border-color: var(--accent); background: var(--accent); color: var(--bg-primary); }
-    .date-selector { display: flex; gap: 12px; margin-bottom: 20px; overflow-x: auto; }
-    .date-btn { flex-shrink: 0; padding: 8px 16px; border-radius: 20px; background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-secondary); font-size: 13px; cursor: pointer; }
-    .date-btn.active { background: var(--accent); color: var(--bg-primary); border-color: var(--accent); }
-    .settings-section { margin-bottom: 24px; }
-    .settings-section h3 { font-size: 13px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 12px; }
-    .settings-item { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 16px; display: flex; justify-content: space-between; margin-bottom: 8px; cursor: pointer; }
-    .theme-options { display: flex; gap: 8px; margin-top: 12px; }
-    .theme-option { flex: 1; padding: 12px; border-radius: 10px; border: 2px solid var(--border); cursor: pointer; text-align: center; font-size: 13px; }
-    .theme-option.active { border-color: var(--accent); }
-    .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
-    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--bg-tertiary); border: 1px solid var(--border); padding: 12px 20px; border-radius: 10px; font-size: 14px; opacity: 0; transition: 0.3s; z-index: 300; }
+    .quick-btn { aspect-ratio: 1; border-radius: 16px; background: var(--card); border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
+    .quick-btn span { font-size: 24px; }
+    .quick-btn label { font-size: 10px; color: var(--text2); }
+    .water-bar { height: 12px; background: var(--bg3); border-radius: 6px; overflow: hidden; margin: 12px 0; }
+    .water-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #00ffcc); border-radius: 6px; transition: width 0.3s; }
+    .water-btns { display: flex; gap: 8px; }
+    .water-btns button { flex: 1; padding: 12px; border-radius: 10px; background: var(--bg3); border: 1px solid var(--border); color: var(--text); cursor: pointer; }
+    .water-btns button:hover { border-color: var(--accent); }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: flex-end; justify-content: center; z-index: 200; }
+    .modal.active { display: flex; }
+    .modal-content { width: 100%; max-width: 480px; background: var(--bg2); border-radius: 24px 24px 0 0; padding: 24px; animation: slideUp 0.3s; }
+    @keyframes slideUp { from { transform: translateY(100%); } }
+    .modal-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
+    .modal-close { width: 32px; height: 32px; border-radius: 8px; background: var(--bg3); border: none; color: var(--text); cursor: pointer; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 13px; color: var(--text2); margin-bottom: 8px; }
+    .field input, .field select { width: 100%; padding: 14px; background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 16px; }
+    .row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .empty { text-align: center; padding: 40px; color: var(--text2); }
+    .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--bg3); border: 1px solid var(--border); padding: 12px 20px; border-radius: 10px; opacity: 0; transition: 0.3s; z-index: 300; }
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .toast.success { border-color: var(--success); color: var(--success); }
     .toast.error { border-color: var(--danger); color: var(--danger); }
-    .logout-btn { width: 100%; padding: 14px; background: rgba(255,107,107,0.1); border: 1px solid var(--danger); border-radius: 12px; color: var(--danger); font-size: 15px; cursor: pointer; margin-top: 32px; }
+    .toast.success { border-color: var(--success); color: var(--success); }
+    .logout { width: 100%; padding: 14px; background: rgba(255,107,107,0.1); border: 1px solid var(--danger); border-radius: 12px; color: var(--danger); margin-top: 32px; cursor: pointer; }
+    .theme-options { display: flex; gap: 8px; margin-top: 12px; }
+    .theme-opt { flex: 1; padding: 12px; border-radius: 10px; border: 2px solid var(--border); text-align: center; cursor: pointer; font-size: 20px; }
+    .theme-opt.active { border-color: var(--accent); }
   </style>
 </head>
 <body>
   <div class="app">
     <div class="auth-page" id="authPage">
-      <div class="auth-logo">
-        <svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="40" r="36" stroke="url(#grad)" stroke-width="4"/><path d="M40 20 L40 45 M28 33 L40 45 L52 33" stroke="url(#grad)" stroke-width="3" stroke-linecap="round"/><defs><linearGradient id="grad" x1="0" y1="0" x2="100" y2="100"><stop offset="0" stop-color="#00d4aa"/><stop offset="100" stop-color="#00ffcc"/></linearGradient></defs></svg>
+      <div class="logo">
         <h1>健身追踪器</h1>
         <p>记录你的每一次进步</p>
       </div>
-      <form class="auth-form" id="loginForm">
-        <div class="input-group"><input type="email" id="loginEmail" placeholder="邮箱地址" required></div>
-        <div class="input-group"><input type="password" id="loginPassword" placeholder="密码" required></div>
-        <button type="submit" class="btn btn-primary btn-block">登录</button>
+      <form class="form" id="loginForm">
+        <input type="email" id="loginEmail" placeholder="邮箱地址" required>
+        <input type="password" id="loginPassword" placeholder="密码" required>
+        <button type="submit" class="btn">登录</button>
       </form>
-      <p class="auth-switch">还没有账号？<a href="#" id="showRegister">立即注册</a></p>
+      <p class="switch">还没有账号？<a href="#" id="showRegister">立即注册</a></p>
     </div>
     <div class="auth-page" id="registerPage" style="display:none">
-      <div class="auth-logo">
-        <svg viewBox="0 0 80 80" fill="none"><circle cx="40" cy="40" r="36" stroke="url(#grad)" stroke-width="4"/><path d="M40 20 L40 45 M28 33 L40 45 L52 33" stroke="url(#grad)" stroke-width="3" stroke-linecap="round"/><defs><linearGradient id="grad" x1="0" y1="0" x2="100" y2="100"><stop offset="0" stop-color="#00d4aa"/><stop offset="100" stop-color="#00ffcc"/></linearGradient></defs></svg>
+      <div class="logo">
         <h1>创建账号</h1>
         <p>开始你的健身之旅</p>
       </div>
-      <form class="auth-form" id="registerForm">
-        <div class="input-group"><input type="email" id="registerEmail" placeholder="邮箱地址" required></div>
-        <div class="input-group"><input type="password" id="registerPassword" placeholder="设置密码（至少6位）" minlength="6" required></div>
-        <button type="submit" class="btn btn-primary btn-block">注册</button>
+      <form class="form" id="registerForm">
+        <input type="email" id="registerEmail" placeholder="邮箱地址" required>
+        <input type="password" id="registerPassword" placeholder="设置密码（至少6位）" minlength="6" required>
+        <button type="submit" class="btn">注册</button>
       </form>
-      <p class="auth-switch">已有账号？<a href="#" id="showLogin">立即登录</a></p>
+      <p class="switch">已有账号？<a href="#" id="showLogin">立即登录</a></p>
     </div>
-    <div class="main-app" id="mainApp">
-      <header class="header"><h1>健身追踪</h1><button class="icon-btn" id="settingsBtn">⚙️</button></header>
+    <div class="main-app" id="mainApp" style="display:none">
+      <header class="header">
+        <h1>健身追踪</h1>
+        <button class="btn" style="padding:8px 16px;font-size:14px" onclick="navigate('settings')">⚙️</button>
+      </header>
       <div class="page active" id="homePage">
-        <div class="water-progress">
-          <div class="water-header"><h3>💧 今日饮水</h3><span id="waterText">0 / 2000 ml</span></div>
-          <div class="water-progress-bar"><div class="water-progress-fill" id="waterFill" style="width:0%"></div></div>
-          <div class="water-controls">
-            <button class="water-btn" onclick="addWater(250)">+250ml</button>
-            <button class="water-btn" onclick="addWater(500)">+500ml</button>
-            <button class="water-btn" onclick="addWater(1000)">+1000ml</button>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h3>💧 今日饮水</h3>
+            <span id="waterText">0 / 2000 ml</span>
+          </div>
+          <div class="water-bar"><div class="water-fill" id="waterFill" style="width:0%"></div></div>
+          <div class="water-btns">
+            <button onclick="addWater(250)">+250ml</button>
+            <button onclick="addWater(500)">+500ml</button>
+            <button onclick="addWater(1000)">+1000ml</button>
           </div>
         </div>
         <div class="quick-add">
-          <button class="quick-add-btn" onclick="openModal('workout')"><span>🏋️</span><label>健身</label></button>
-          <button class="quick-add-btn" onclick="openModal('meal')"><span>🍽️</span><label>饮食</label></button>
-          <button class="quick-add-btn" onclick="openModal('weight')"><span>⚖️</span><label>体重</label></button>
-          <button class="quick-add-btn" onclick="openModal('water')"><span>💧</span><label>喝水</label></button>
+          <button class="quick-btn" onclick="openModal('workout')"><span>🏋️</span><label>健身</label></button>
+          <button class="quick-btn" onclick="openModal('meal')"><span>🍽️</span><label>饮食</label></button>
+          <button class="quick-btn" onclick="openModal('weight')"><span>⚖️</span><label>体重</label></button>
+          <button class="quick-btn" onclick="openModal('water')"><span>💧</span><label>喝水</label></button>
         </div>
         <h3 style="margin-bottom:12px">📊 本周统计</h3>
         <div class="stats-grid">
-          <div class="stat-card"><div class="icon" style="background:rgba(0,212,170,0.2)">🏋️</div><div class="value" id="weekWorkouts">0</div><div class="label">锻炼次数</div></div>
-          <div class="stat-card"><div class="icon" style="background:rgba(255,107,107,0.2)">🔥</div><div class="value" id="weekCalories">0</div><div class="label">摄入卡路里</div></div>
-          <div class="stat-card"><div class="icon" style="background:rgba(255,217,61,0.2)">💪</div><div class="value" id="weekWeight">--</div><div class="label">当前体重</div></div>
-          <div class="stat-card"><div class="icon" style="background:rgba(107,203,119,0.2)">💧</div><div class="value" id="weekWater">0</div><div class="label">饮水量</div></div>
+          <div class="card stat-card"><div class="icon" style="background:rgba(0,212,170,0.2)">🏋️</div><div class="value" id="weekWorkouts">0</div><div class="label">锻炼次数</div></div>
+          <div class="card stat-card"><div class="icon" style="background:rgba(255,107,107,0.2)">🔥</div><div class="value" id="weekCalories">0</div><div class="label">摄入卡路里</div></div>
+          <div class="card stat-card"><div class="icon" style="background:rgba(255,217,61,0.2)">💪</div><div class="value" id="weekWeight">--</div><div class="label">当前体重</div></div>
+          <div class="card stat-card"><div class="icon" style="background:rgba(107,203,119,0.2)">💧</div><div class="value" id="weekWater">0</div><div class="label">饮水量</div></div>
         </div>
         <h3 style="margin:24px 0 12px">📝 今日记录</h3>
-        <div id="todayRecords"><div class="empty-state"><p>今天还没有记录</p></div></div>
+        <div id="todayRecords"><div class="empty">今天还没有记录</div></div>
       </div>
       <div class="page" id="recordsPage">
-        <div class="date-selector" id="dateSelector"></div>
+        <div class="date-selector" id="dateSelector" style="display:flex;gap:12px;margin-bottom:20px;overflow-x:auto"></div>
         <div style="display:flex;gap:8px;margin-bottom:20px">
-          <button class="date-btn active" onclick="filterRecords('all')">全部</button>
-          <button class="date-btn" onclick="filterRecords('workout')">健身</button>
-          <button class="date-btn" onclick="filterRecords('meal')">饮食</button>
-          <button class="date-btn" onclick="filterRecords('weight')">体重</button>
+          <button class="btn" style="padding:8px 16px;font-size:13px" onclick="filterRec('all')">全部</button>
+          <button class="btn" style="padding:8px 16px;font-size:13px;background:var(--bg3);color:var(--text)" onclick="filterRec('workout')">健身</button>
+          <button class="btn" style="padding:8px 16px;font-size:13px;background:var(--bg3);color:var(--text)" onclick="filterRec('meal')">饮食</button>
+          <button class="btn" style="padding:8px 16px;font-size:13px;background:var(--bg3);color:var(--text)" onclick="filterRec('weight')">体重</button>
         </div>
-        <div id="recordsList"><div class="empty-state"><p>暂无记录</p></div></div>
+        <div id="recordsList"><div class="empty">暂无记录</div></div>
       </div>
       <div class="page" id="statsPage">
         <h3 style="margin-bottom:16px">📈 数据统计</h3>
         <div class="stats-grid">
-          <div class="stat-card"><div class="icon" style="background:rgba(0,212,170,0.2)">🏋️</div><div class="value" id="totalWorkouts">0</div><div class="label">总锻炼次数</div></div>
-          <div class="stat-card"><div class="icon" style="background:rgba(255,107,107,0.2)">🔥</div><div class="value" id="totalCalories">0</div><div class="label">总摄入卡路里</div></div>
-          <div class="stat-card"><div class="icon" style="background:rgba(255,217,61,0.2)">🥩</div><div class="value" id="totalProtein">0g</div><div class="label">总蛋白质</div></div>
-          <div class="stat-card"><div class="icon" style="background:rgba(107,203,119,0.2)">💧</div><div class="value" id="totalWater">0</div><div class="label">总饮水量</div></div>
+          <div class="card stat-card"><div class="icon" style="background:rgba(0,212,170,0.2)">🏋️</div><div class="value" id="totalWorkouts">0</div><div class="label">总锻炼次数</div></div>
+          <div class="card stat-card"><div class="icon" style="background:rgba(255,107,107,0.2)">🔥</div><div class="value" id="totalCalories">0</div><div class="label">总摄入卡路里</div></div>
+          <div class="card stat-card"><div class="icon" style="background:rgba(255,217,61,0.2)">🥩</div><div class="value" id="totalProtein">0g</div><div class="label">总蛋白质</div></div>
+          <div class="card stat-card"><div class="icon" style="background:rgba(107,203,119,0.2)">💧</div><div class="value" id="totalWater">0</div><div class="label">总饮水量</div></div>
         </div>
         <h3 style="margin:24px 0 12px">体重趋势</h3>
-        <div class="record-card"><div class="info"><div class="title">最新体重</div><div class="meta" id="latestWeight">暂无数据</div></div></div>
-        <div class="record-card"><div class="info"><div class="title">平均体重</div><div class="meta" id="avgWeight">暂无数据</div></div></div>
-        <div class="record-card"><div class="info"><div class="title">最低体重</div><div class="meta" id="minWeight">暂无数据</div></div></div>
-        <div class="record-card"><div class="info"><div class="title">最高体重</div><div class="meta" id="maxWeight">暂无数据</div></div></div>
+        <div class="card"><div style="display:flex;justify-content:space-between"><span>最新体重</span><span id="latestWeight">--</span></div></div>
+        <div class="card"><div style="display:flex;justify-content:space-between"><span>平均体重</span><span id="avgWeight">--</span></div></div>
+        <div class="card"><div style="display:flex;justify-content:space-between"><span>最低体重</span><span id="minWeight">--</span></div></div>
+        <div class="card"><div style="display:flex;justify-content:space-between"><span>最高体重</span><span id="maxWeight">--</span></div></div>
       </div>
       <div class="page" id="settingsPage">
-        <div class="settings-section">
-          <h3>外观</h3>
-          <div class="theme-options">
-            <div class="theme-option active" data-theme="dark" onclick="setTheme('dark')">🌙</div>
-            <div class="theme-option" data-theme="light" onclick="setTheme('light')">☀️</div>
-            <div class="theme-option" data-theme="ocean" onclick="setTheme('ocean')">🌊</div>
-            <div class="theme-option" data-theme="sunset" onclick="setTheme('sunset')">🌅</div>
-          </div>
+        <h3 style="margin-bottom:12px;color:var(--text2);font-size:13px">外观</h3>
+        <div class="theme-options">
+          <div class="theme-opt active" onclick="setTheme('dark')">🌙</div>
+          <div class="theme-opt" onclick="setTheme('light')">☀️</div>
+          <div class="theme-opt" onclick="setTheme('ocean')">🌊</div>
+          <div class="theme-opt" onclick="setTheme('sunset')">🌅</div>
         </div>
-        <div class="settings-section">
-          <h3>目标</h3>
-          <div class="settings-item" onclick="openGoalModal('water')"><span>每日饮水目标</span><span class="value" id="waterGoalValue">2000ml</span></div>
-          <div class="settings-item" onclick="openGoalModal('calorie')"><span>每日卡路里目标</span><span class="value" id="calorieGoalValue">2000kcal</span></div>
-        </div>
-        <button class="logout-btn" onclick="logout()">退出登录</button>
+        <h3 style="margin:24px 0 12px;color:var(--text2);font-size:13px">目标</h3>
+        <div class="card" onclick="openGoal('water')" style="cursor:pointer;display:flex;justify-content:space-between"><span>每日饮水目标</span><span id="waterGoal">2000ml</span></div>
+        <div class="card" onclick="openGoal('calorie')" style="cursor:pointer;display:flex;justify-content:space-between"><span>每日卡路里目标</span><span id="calGoal">2000kcal</span></div>
+        <button class="logout" onclick="logout()">退出登录</button>
       </div>
-      <nav class="bottom-nav">
-        <a href="#" class="nav-item active" data-page="home">🏠<span>首页</span></a>
-        <a href="#" class="nav-item" data-page="records">📝<span>记录</span></a>
-        <a href="#" class="nav-item" data-page="stats">📊<span>统计</span></a>
-        <a href="#" class="nav-item" data-page="settings">⚙️<span>设置</span></a>
+      <nav class="nav">
+        <div class="nav-item active" onclick="navigate('home')"><span style="font-size:20px">🏠</span><span>首页</span></div>
+        <div class="nav-item" onclick="navigate('records')"><span style="font-size:20px">📝</span><span>记录</span></div>
+        <div class="nav-item" onclick="navigate('stats')"><span style="font-size:20px">📊</span><span>统计</span></div>
+        <div class="nav-item" onclick="navigate('settings')"><span style="font-size:20px">⚙️</span><span>设置</span></div>
       </nav>
     </div>
   </div>
-  <div class="modal-overlay" id="recordModal">
-    <div class="modal">
+  <div class="modal" id="recordModal">
+    <div class="modal-content">
       <div class="modal-header"><h2 id="modalTitle">添加记录</h2><button class="modal-close" onclick="closeModal()">✕</button></div>
       <form id="recordForm">
         <div id="workoutFields" style="display:none">
-          <div class="form-group"><label>运动类型</label><select id="workoutType"><option>力量训练</option><option>有氧运动</option><option>瑜伽</option><option>游泳</option><option>骑行</option><option>跑步</option></select></div>
-          <div class="form-row"><div class="form-group"><label>时长(分钟)</label><input type="number" id="workoutDuration"></div><div class="form-group"><label>重量(kg)</label><input type="number" id="workoutWeight" step="0.5"></div></div>
-          <div class="form-row"><div class="form-group"><label>组数</label><input type="number" id="workoutSets"></div><div class="form-group"><label>次数</label><input type="number" id="workoutReps"></div></div>
+          <div class="field"><label>运动类型</label><select id="workoutType"><option>力量训练</option><option>有氧运动</option><option>瑜伽</option><option>游泳</option><option>骑行</option><option>跑步</option></select></div>
+          <div class="row"><div class="field"><label>时长(分钟)</label><input type="number" id="workoutDuration"></div><div class="field"><label>重量(kg)</label><input type="number" id="workoutWeight" step="0.5"></div></div>
+          <div class="row"><div class="field"><label>组数</label><input type="number" id="workoutSets"></div><div class="field"><label>次数</label><input type="number" id="workoutReps"></div></div>
         </div>
         <div id="mealFields" style="display:none">
-          <div class="form-group"><label>餐次</label><select id="mealType"><option>早餐</option><option>午餐</option><option>晚餐</option><option>加餐</option></select></div>
-          <div class="form-group"><label>食物</label><input type="text" id="mealFood" required></div>
-          <div class="form-row"><div class="form-group"><label>卡路里</label><input type="number" id="mealCalories"></div><div class="form-group"><label>蛋白质(g)</label><input type="number" id="mealProtein" step="0.1"></div></div>
+          <div class="field"><label>餐次</label><select id="mealType"><option>早餐</option><option>午餐</option><option>晚餐</option><option>加餐</option></select></div>
+          <div class="field"><label>食物</label><input type="text" id="mealFood" required></div>
+          <div class="row"><div class="field"><label>卡路里</label><input type="number" id="mealCalories"></div><div class="field"><label>蛋白质(g)</label><input type="number" id="mealProtein" step="0.1"></div></div>
         </div>
-        <div id="weightFields" style="display:none"><div class="form-group"><label>体重(kg)</label><input type="number" id="weightValue" step="0.1" required></div></div>
-        <div id="waterFields" style="display:none"><div class="form-group"><label>饮水量(ml)</label><input type="number" id="waterAmount" required></div></div>
-        <div class="form-group"><label>日期</label><input type="date" id="recordDate"></div>
-        <button type="submit" class="btn btn-primary btn-block">保存</button>
+        <div id="weightFields" style="display:none"><div class="field"><label>体重(kg)</label><input type="number" id="weightValue" step="0.1" required></div></div>
+        <div id="waterFields" style="display:none"><div class="field"><label>饮水量(ml)</label><input type="number" id="waterAmount" required></div></div>
+        <div class="field"><label>日期</label><input type="date" id="recordDate"></div>
+        <button type="submit" class="btn">保存</button>
       </form>
     </div>
   </div>
-  <div class="modal-overlay" id="goalModal">
-    <div class="modal">
-      <div class="modal-header"><h2 id="goalTitle">设置目标</h2><button class="modal-close" onclick="closeGoalModal()">✕</button></div>
+  <div class="modal" id="goalModal">
+    <div class="modal-content">
+      <div class="modal-header"><h2 id="goalTitle">设置目标</h2><button class="modal-close" onclick="document.getElementById('goalModal').classList.remove('active')">✕</button></div>
       <form id="goalForm">
-        <div class="form-group"><label id="goalLabel">目标值</label><input type="number" id="goalValue" required></div>
-        <button type="submit" class="btn btn-primary btn-block">保存</button>
+        <div class="field"><label id="goalLabel">目标值</label><input type="number" id="goalValue" required></div>
+        <button type="submit" class="btn">保存</button>
       </form>
     </div>
   </div>
   <div class="toast" id="toast"></div>
-  <script>
-    // 数据存在 localStorage
-    const STORAGE_KEY = 'fitness_data';
-    
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // ========== Firebase 配置 ==========
+    // TODO: 请替换为你的 Firebase 配置
+    // 1. 去 https://console.firebase.google.com/ 创建一个项目
+    // 2. 开启 "Authentication" - 邮箱/密码登录
+    // 3. 开启 "Realtime Database" - 创建数据库（选测试模式或锁定模式）
+    // 4. 把项目设置里的配置复制下来
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // 初始化 Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    // 全局变量
+    let currentUser = null;
     let userData = null;
+    let settings = { theme: 'dark', daily_water_goal: 2000, daily_calorie_goal: 2000 };
     let currentPage = 'home';
-    let currentModalType = '';
+    let currentModal = '';
     let currentGoalType = '';
     let selectedDate = new Date().toISOString().split('T')[0];
     let allRecords = { workouts: [], meals: [], weights: [], water: [] };
-    let settings = { theme: 'dark', daily_water_goal: 2000, daily_calorie_goal: 2000 };
 
-    // 保存数据
-    function saveData() {
-      if (userData) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
-      }
-    }
-
-    // 加载数据
-    function loadData() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        userData = JSON.parse(saved);
-        settings = userData.settings || { theme: 'dark', daily_water_goal: 2000, daily_calorie_goal: 2000 };
-        return true;
-      }
-      return false;
-    }
-
-    // 初始化
-    document.addEventListener('DOMContentLoaded', () => {
-      if (loadData()) {
+    // 监听登录状态
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUser = user;
+        await loadUserData();
         showMainApp();
-        loadTodayData();
-        loadWeekStats();
-        loadAllStats();
       } else {
         showAuthPage();
       }
-      applyTheme(settings.theme);
-      setupEventListeners();
     });
 
-    function setupEventListeners() {
-      document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', e => { e.preventDefault(); navigateTo(item.dataset.page); });
-      });
-      document.getElementById('loginForm').addEventListener('submit', handleLogin);
-      document.getElementById('registerForm').addEventListener('submit', handleRegister);
-      document.getElementById('showRegister').addEventListener('click', e => { e.preventDefault(); document.getElementById('authPage').style.display = 'none'; document.getElementById('registerPage').style.display = 'flex'; });
-      document.getElementById('showLogin').addEventListener('click', e => { e.preventDefault(); document.getElementById('registerPage').style.display = 'none'; document.getElementById('authPage').style.display = 'flex'; });
-      document.getElementById('settingsBtn').addEventListener('click', () => navigateTo('settings'));
-      document.getElementById('recordForm').addEventListener('submit', handleRecordSubmit);
-      document.getElementById('goalForm').addEventListener('submit', handleGoalSubmit);
-      document.getElementById('recordModal').addEventListener('click', e => { if (e.target.id === 'recordModal') closeModal(); });
-      document.getElementById('goalModal').addEventListener('click', e => { if (e.target.id === 'goalModal') closeGoalModal(); });
-      document.getElementById('recordDate').value = selectedDate;
+    // 加载用户数据
+    async function loadUserData() {
+      try {
+        const snapshot = await get(ref(db, 'users/' + currentUser.uid));
+        if (snapshot.exists()) {
+          userData = snapshot.val();
+          settings = userData.settings || { theme: 'dark', daily_water_goal: 2000, daily_calorie_goal: 2000 };
+          applyTheme(settings.theme);
+          loadTodayData();
+          loadWeekStats();
+          loadAllStats();
+        } else {
+          // 新用户，创建初始数据
+          userData = {
+            workouts: {}, meals: {}, weights: {}, water: {},
+            settings: settings
+          };
+          await set(ref(db, 'users/' + currentUser.uid), userData);
+        }
+      } catch(e) {
+        console.error('加载数据失败', e);
+        showToast('加载数据失败: ' + e.message, 'error');
+      }
     }
 
-    // 登录
-    async function handleLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('loginEmail').value;
-      if (loadData() && userData && userData.email === email) {
-        showMainApp();
-        loadTodayData();
-        loadWeekStats();
-        loadAllStats();
-      } else {
-        showToast('账号不存在，请先注册', 'error');
+    // 保存数据
+    async function saveData() {
+      if (!currentUser || !userData) return;
+      try {
+        await update(ref(db, 'users/' + currentUser.uid), userData);
+      } catch(e) {
+        console.error('保存失败', e);
       }
     }
 
     // 注册
-    async function handleRegister(e) {
+    window.handleRegister = async (e) => {
       e.preventDefault();
       const email = document.getElementById('registerEmail').value;
-      userData = {
-        email,
-        workouts: [], meals: [], weights: [], water: [],
-        settings: { theme: 'dark', daily_water_goal: 2000, daily_calorie_goal: 2000 }
-      };
-      saveData();
-      showMainApp();
-      showToast('注册成功！', 'success');
-      loadTodayData();
-    }
+      const password = document.getElementById('registerPassword').value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        showToast('注册成功！', 'success');
+      } catch(e) {
+        showToast(e.message, 'error');
+      }
+    };
 
-    function logout() {
-      localStorage.removeItem(STORAGE_KEY);
+    // 登录
+    window.handleLogin = async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch(e) {
+        showToast(e.message, 'error');
+      }
+    };
+
+    // 退出
+    window.logout = async () => {
+      await signOut(auth);
       userData = null;
       location.reload();
-    }
+    };
 
-    function showAuthPage() {
-      document.getElementById('authPage').style.display = 'flex';
-      document.getElementById('registerPage').style.display = 'none';
-      document.getElementById('mainApp').style.display = 'none';
-    }
-
-    function showMainApp() {
-      document.getElementById('authPage').style.display = 'none';
-      document.getElementById('registerPage').style.display = 'none';
-      document.getElementById('mainApp').style.display = 'block';
-    }
-
-    function navigateTo(page) {
+    // 页面导航
+    window.navigate = (page) => {
       currentPage = page;
-      document.querySelectorAll('.nav-item').forEach(item => item.classList.toggle('active', item.dataset.page === page));
-      document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === page + 'Page'));
+      document.querySelectorAll('.nav-item').forEach((el, i) => {
+        el.classList.toggle('active', ['home','records','stats','settings'][i] === page);
+      });
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(page + 'Page').classList.add('active');
       if (page === 'records') renderDateSelector();
-    }
+    };
 
+    // 加载今日数据
     function loadTodayData() {
       const date = new Date().toISOString().split('T')[0];
-      allRecords.workouts = (userData.workouts || []).filter(r => r.date === date);
-      allRecords.meals = (userData.meals || []).filter(r => r.date === date);
-      allRecords.weights = (userData.weights || []).filter(r => r.date === date);
-      allRecords.water = (userData.water || []).filter(r => r.date === date);
+      allRecords.workouts = Object.values(userData.workouts || {}).filter(r => r.date === date);
+      allRecords.meals = Object.values(userData.meals || {}).filter(r => r.date === date);
+      allRecords.weights = Object.values(userData.weights || {}).filter(r => r.date === date);
+      allRecords.water = Object.values(userData.water || {}).filter(r => r.date === date);
       renderTodayRecords();
       renderWaterProgress();
     }
@@ -354,28 +344,32 @@
       const today = new Date();
       const weekAgo = new Date(today.getTime() - 7*24*60*60*1000).toISOString().split('T')[0];
       const todayStr = today.toISOString().split('T')[0];
-      const weekW = (userData.workouts || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
-      const weekM = (userData.meals || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
-      const weekWt = (userData.water || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
-      const weekWg = (userData.weights || []).filter(r => r.date >= weekAgo && r.date <= todayStr);
-      document.getElementById('weekWorkouts').textContent = weekW.length;
-      document.getElementById('weekCalories').textContent = weekM.reduce((s,m) => s + (m.calories||0), 0);
-      document.getElementById('weekWater').textContent = weekWt.reduce((s,w) => s + w.amount, 0);
-      if (weekWg.length) document.getElementById('weekWeight').textContent = (weekWg.reduce((s,w) => s + w.weight, 0) / weekWg.length).toFixed(1) + 'kg';
+      const workouts = Object.values(userData.workouts || {}).filter(r => r.date >= weekAgo && r.date <= todayStr);
+      const meals = Object.values(userData.meals || {}).filter(r => r.date >= weekAgo && r.date <= todayStr);
+      const water = Object.values(userData.water || {}).filter(r => r.date >= weekAgo && r.date <= todayStr);
+      const weights = Object.values(userData.weights || {}).filter(r => r.date >= weekAgo && r.date <= todayStr);
+      
+      document.getElementById('weekWorkouts').textContent = workouts.length;
+      document.getElementById('weekCalories').textContent = meals.reduce((s,m) => s + (m.calories||0), 0);
+      document.getElementById('weekWater').textContent = water.reduce((s,w) => s + w.amount, 0);
+      if (weights.length) {
+        document.getElementById('weekWeight').textContent = (weights.reduce((s,w) => s + w.weight, 0) / weights.length).toFixed(1) + 'kg';
+      }
     }
 
     function loadAllStats() {
-      const workouts = userData.workouts || [];
-      const meals = userData.meals || [];
-      const water = userData.water || [];
-      const weights = userData.weights || [];
+      const workouts = Object.values(userData.workouts || {});
+      const meals = Object.values(userData.meals || {});
+      const water = Object.values(userData.water || {});
+      const weights = Object.values(userData.weights || {});
+      
       document.getElementById('totalWorkouts').textContent = workouts.length;
       document.getElementById('totalCalories').textContent = meals.reduce((s,m) => s + (m.calories||0), 0);
       document.getElementById('totalProtein').textContent = meals.reduce((s,m) => s + (m.protein||0), 0).toFixed(1) + 'g';
       document.getElementById('totalWater').textContent = water.reduce((s,w) => s + w.amount, 0);
+      
       if (weights.length) {
-        const sorted = [...weights].sort((a,b) => new Date(b.date) - new Date(a.date));
-        document.getElementById('latestWeight').textContent = sorted[0].weight + 'kg';
+        document.getElementById('latestWeight').textContent = weights[weights.length-1].weight + 'kg';
         document.getElementById('avgWeight').textContent = (weights.reduce((s,w) => s + w.weight, 0) / weights.length).toFixed(1) + 'kg';
         document.getElementById('minWeight').textContent = Math.min(...weights.map(w => w.weight)) + 'kg';
         document.getElementById('maxWeight').textContent = Math.max(...weights.map(w => w.weight)) + 'kg';
@@ -388,8 +382,17 @@
       allRecords.meals.forEach(r => records.push({...r, type:'meal', title:r.food, meta:`${r.calories||0}kcal`}));
       allRecords.weights.forEach(r => records.push({...r, type:'weight', title:'体重', meta:`${r.weight}kg`}));
       allRecords.water.forEach(r => records.push({...r, type:'water', title:'喝水', meta:`${r.amount}ml`}));
-      const html = records.length ? records.map(r => `<div class="record-card"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.meta}</div></div><button class="btn-icon" onclick="deleteRecord('${r.type}',${r.id})">🗑️</button></div>`).join('') : '<div class="empty-state"><p>今天还没有记录</p></div>';
-      document.getElementById('todayRecords').innerHTML = html;
+      
+      if (!records.length) {
+        document.getElementById('todayRecords').innerHTML = '<div class="empty">今天还没有记录</div>';
+        return;
+      }
+      document.getElementById('todayRecords').innerHTML = records.map(r => 
+        `<div class="card" style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-weight:600">${r.title}</div><div style="font-size:13px;color:var(--text2)">${r.meta}</div></div>
+          <button onclick="deleteRecord('${r.type}','${r.id}')" style="background:none;border:none;font-size:20px;cursor:pointer">🗑️</button>
+        </div>`
+      ).join('');
     }
 
     function renderWaterProgress() {
@@ -404,18 +407,18 @@
       container.innerHTML = [6,5,4,3,2,1,0].map(i => {
         const d = new Date(); d.setDate(d.getDate() - i);
         const ds = d.toISOString().split('T')[0];
-        const active = ds === selectedDate ? 'active' : '';
-        return `<button class="date-btn ${active}" onclick="selectDate('${ds}')">${d.getMonth()+1}/${d.getDate()}</button>`;
+        const active = ds === selectedDate ? 'background:var(--accent);color:var(--bg)' : '';
+        return `<button onclick="selectDate('${ds}')" style="padding:8px 12px;border-radius:20px;border:1px solid var(--border);background:${active};color:var(--text);cursor:pointer;font-size:13px">${d.getMonth()+1}/${d.getDate()}</button>`;
       }).join('');
       loadRecordsForDate(selectedDate);
     }
 
     function loadRecordsForDate(date) {
       selectedDate = date;
-      allRecords.workouts = (userData.workouts || []).filter(r => r.date === date);
-      allRecords.meals = (userData.meals || []).filter(r => r.date === date);
-      allRecords.weights = (userData.weights || []).filter(r => r.date === date);
-      allRecords.water = (userData.water || []).filter(r => r.date === date);
+      allRecords.workouts = Object.values(userData.workouts || {}).filter(r => r.date === date);
+      allRecords.meals = Object.values(userData.meals || {}).filter(r => r.date === date);
+      allRecords.weights = Object.values(userData.weights || {}).filter(r => r.date === date);
+      allRecords.water = Object.values(userData.water || {}).filter(r => r.date === date);
       renderRecordsList();
     }
 
@@ -424,122 +427,165 @@
       allRecords.workouts.forEach(r => records.push({...r, type:'workout', title:r.type, meta:`${r.duration||0}分钟`}));
       allRecords.meals.forEach(r => records.push({...r, type:'meal', title:r.food, meta:`${r.calories||0}kcal`}));
       allRecords.weights.forEach(r => records.push({...r, type:'weight', title:'体重', meta:`${r.weight}kg`}));
-      const html = records.length ? records.map(r => `<div class="record-card"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.meta}</div></div><button class="btn-icon" onclick="deleteRecord('${r.type}',${r.id})">🗑️</button></div>`).join('') : '<div class="empty-state"><p>暂无记录</p></div>';
-      document.getElementById('recordsList').innerHTML = html;
+      
+      if (!records.length) {
+        document.getElementById('recordsList').innerHTML = '<div class="empty">暂无记录</div>';
+        return;
+      }
+      document.getElementById('recordsList').innerHTML = records.map(r => 
+        `<div class="card" style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-weight:600">${r.title}</div><div style="font-size:13px;color:var(--text2)">${r.meta}</div></div>
+          <button onclick="deleteRecord('${r.type}','${r.id}')" style="background:none;border:none;font-size:20px;cursor:pointer">🗑️</button>
+        </div>`
+      ).join('');
     }
 
-    function filterRecords(type) {
-      document.querySelectorAll('#recordsPage .date-btn').forEach(b => b.classList.remove('active'));
-      event.target.classList.add('active');
+    window.filterRec = (type) => {
       const records = [];
       if (type === 'all' || type === 'workout') allRecords.workouts.forEach(r => records.push({...r, type:'workout', title:r.type, meta:`${r.duration||0}分钟`}));
       if (type === 'all' || type === 'meal') allRecords.meals.forEach(r => records.push({...r, type:'meal', title:r.food, meta:`${r.calories||0}kcal`}));
       if (type === 'all' || type === 'weight') allRecords.weights.forEach(r => records.push({...r, type:'weight', title:'体重', meta:`${r.weight}kg`}));
-      document.getElementById('recordsList').innerHTML = records.length ? records.map(r => `<div class="record-card"><div class="info"><div class="title">${r.title}</div><div class="meta">${r.meta}</div></div><button class="btn-icon" onclick="deleteRecord('${r.type}',${r.id})">🗑️</button></div>`).join('') : '<div class="empty-state"><p>暂无记录</p></div>';
-    }
+      
+      if (!records.length) {
+        document.getElementById('recordsList').innerHTML = '<div class="empty">暂无记录</div>';
+        return;
+      }
+      document.getElementById('recordsList').innerHTML = records.map(r => 
+        `<div class="card" style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-weight:600">${r.title}</div><div style="font-size:13px;color:var(--text2)">${r.meta}</div></div>
+          <button onclick="deleteRecord('${r.type}','${r.id}')" style="background:none;border:none;font-size:20px;cursor:pointer">🗑️</button>
+        </div>`
+      ).join('');
+    };
 
-    function selectDate(date) { loadRecordsForDate(date); }
+    window.selectDate = (date) => { loadRecordsForDate(date); };
 
-    function openModal(type) {
-      currentModalType = type;
+    window.openModal = (type) => {
+      currentModal = type;
       const titles = {workout:'添加健身',meal:'添加饮食',weight:'记录体重',water:'记录喝水'};
       document.getElementById('modalTitle').textContent = titles[type];
       document.getElementById('workoutFields').style.display = type==='workout'?'block':'none';
       document.getElementById('mealFields').style.display = type==='meal'?'block':'none';
       document.getElementById('weightFields').style.display = type==='weight'?'block':'none';
       document.getElementById('waterFields').style.display = type==='water'?'block':'none';
+      document.getElementById('recordDate').value = selectedDate;
       document.getElementById('recordModal').classList.add('active');
-    }
+    };
 
-    function closeModal() { document.getElementById('recordModal').classList.remove('active'); document.getElementById('recordForm').reset(); }
+    window.closeModal = () => {
+      document.getElementById('recordModal').classList.remove('active');
+      document.getElementById('recordForm').reset();
+    };
 
-    function handleRecordSubmit(e) {
+    window.handleRecordSubmit = async (e) => {
       e.preventDefault();
       const date = document.getElementById('recordDate').value;
-      const id = Date.now();
+      const id = Date.now().toString();
       let record = { id, date };
       
-      if (currentModalType === 'workout') {
-        record = {...record, type:document.getElementById('workoutType').value, duration:parseInt(document.getElementById('workoutDuration').value)||0, weight:parseFloat(document.getElementById('workoutWeight').value)||0, sets:parseInt(document.getElementById('workoutSets').value)||0, reps:parseInt(document.getElementById('workoutReps').value)||0};
-        userData.workouts = userData.workouts || [];
-        userData.workouts.push(record);
-      } else if (currentModalType === 'meal') {
+      if (currentModal === 'workout') {
+        record = {...record, type:document.getElementById('workoutType').value, duration:parseInt(document.getElementById('workoutDuration').value)||0, weight:parseFloat(document.getElementById('workoutWeight').value)||0};
+        userData.workouts = userData.workouts || {};
+        userData.workouts[id] = record;
+      } else if (currentModal === 'meal') {
         record = {...record, type:document.getElementById('mealType').value, food:document.getElementById('mealFood').value, calories:parseInt(document.getElementById('mealCalories').value)||0, protein:parseFloat(document.getElementById('mealProtein').value)||0};
-        userData.meals = userData.meals || [];
-        userData.meals.push(record);
-      } else if (currentModalType === 'weight') {
+        userData.meals = userData.meals || {};
+        userData.meals[id] = record;
+      } else if (currentModal === 'weight') {
         record = {...record, weight:parseFloat(document.getElementById('weightValue').value)};
-        userData.weights = userData.weights || [];
-        userData.weights.push(record);
-      } else if (currentModalType === 'water') {
+        userData.weights = userData.weights || {};
+        userData.weights[id] = record;
+      } else if (currentModal === 'water') {
         record = {...record, amount:parseInt(document.getElementById('waterAmount').value)};
-        userData.water = userData.water || [];
-        userData.water.push(record);
+        userData.water = userData.water || {};
+        userData.water[id] = record;
       }
       
-      saveData();
+      await saveData();
       showToast('记录已保存', 'success');
       closeModal();
       loadTodayData();
       loadWeekStats();
       loadAllStats();
-    }
+    };
 
-    function addWater(amount) {
+    window.addWater = async (amount) => {
       const date = new Date().toISOString().split('T')[0];
-      userData.water = userData.water || [];
-      userData.water.push({ id: Date.now(), date, amount });
-      saveData();
+      const id = Date.now().toString();
+      userData.water = userData.water || {};
+      userData.water[id] = { id, date, amount };
+      await saveData();
       showToast(`已添加 ${amount}ml`, 'success');
       loadTodayData();
       loadWeekStats();
-    }
+    };
 
-    async function deleteRecord(type, id) {
+    window.deleteRecord = async (type, id) => {
       if (!confirm('确定删除？')) return;
-      if (type === 'workout') userData.workouts = userData.workouts.filter(r => r.id !== id);
-      else if (type === 'meal') userData.meals = userData.meals.filter(r => r.id !== id);
-      else if (type === 'weight') userData.weights = userData.weights.filter(r => r.id !== id);
-      else if (type === 'water') userData.water = userData.water.filter(r => r.id !== id);
-      saveData();
+      if (type === 'workout' && userData.workouts) delete userData.workouts[id];
+      else if (type === 'meal' && userData.meals) delete userData.meals[id];
+      else if (type === 'weight' && userData.weights) delete userData.weights[id];
+      else if (type === 'water' && userData.water) delete userData.water[id];
+      await saveData();
       showToast('已删除', 'success');
       loadTodayData();
       loadWeekStats();
       loadAllStats();
       if (currentPage === 'records') loadRecordsForDate(selectedDate);
-    }
+    };
 
-    function openGoalModal(type) {
+    window.openGoal = (type) => {
       currentGoalType = type;
-      const titles = {water:'每日饮水目标',calorie:'每日卡路里目标'};
-      document.getElementById('goalTitle').textContent = titles[type];
+      document.getElementById('goalTitle').textContent = type === 'water' ? '每日饮水目标' : '每日卡路里目标';
+      document.getElementById('goalLabel').textContent = type === 'water' ? '目标饮水量(ml)' : '目标卡路里(kcal)';
       document.getElementById('goalValue').value = type === 'water' ? settings.daily_water_goal : settings.daily_calorie_goal;
       document.getElementById('goalModal').classList.add('active');
-    }
+    };
 
-    function closeGoalModal() { document.getElementById('goalModal').classList.remove('active'); }
-
-    function handleGoalSubmit(e) {
+    window.handleGoalSubmit = async (e) => {
       e.preventDefault();
       const value = parseInt(document.getElementById('goalValue').value);
-      if (currentGoalType === 'water') { settings.daily_water_goal = value; document.getElementById('waterGoalValue').textContent = value + 'ml'; }
-      else { settings.daily_calorie_goal = value; document.getElementById('calorieGoalValue').textContent = value + 'kcal'; }
+      if (currentGoalType === 'water') {
+        settings.daily_water_goal = value;
+        document.getElementById('waterGoal').textContent = value + 'ml';
+      } else {
+        settings.daily_calorie_goal = value;
+        document.getElementById('calGoal').textContent = value + 'kcal';
+      }
       userData.settings = settings;
-      saveData();
+      await saveData();
       showToast('目标已更新', 'success');
-      closeGoalModal();
+      document.getElementById('goalModal').classList.remove('active');
       loadTodayData();
-    }
+    };
 
-    function setTheme(theme) {
-      applyTheme(theme);
+    window.setTheme = async (theme) => {
       settings.theme = theme;
       userData.settings = settings;
-      saveData();
-      document.querySelectorAll('.theme-option').forEach(o => o.classList.toggle('active', o.dataset.theme === theme));
+      await saveData();
+      applyTheme(theme);
+      document.querySelectorAll('.theme-opt').forEach(o => o.classList.toggle('active', o.textContent.includes({'dark':'🌙','light':'☀️','ocean':'🌊','sunset':'🌅'}[theme])));
+    };
+
+    function applyTheme(theme) {
+      document.body.className = 'theme-' + theme;
+      const icons = {'dark':'🌙','light':'☀️','ocean':'🌊','sunset':'🌅'};
+      document.querySelectorAll('.theme-opt').forEach(o => o.classList.toggle('active', o.textContent === icons[theme]));
     }
 
-    function applyTheme(theme) { document.body.className = 'theme-' + theme; }
+    function showAuthPage() {
+      document.getElementById('authPage').style.display = 'flex';
+      document.getElementById('registerPage').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'none';
+    }
+
+    function showMainApp() {
+      document.getElementById('authPage').style.display = 'none';
+      document.getElementById('registerPage').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'block';
+      document.getElementById('waterGoal').textContent = settings.daily_water_goal + 'ml';
+      document.getElementById('calGoal').textContent = settings.daily_calorie_goal + 'kcal';
+    }
 
     function showToast(msg, type='') {
       const t = document.getElementById('toast');
@@ -547,6 +593,15 @@
       t.className = 'toast ' + type + ' show';
       setTimeout(() => t.classList.remove('show'), 2500);
     }
+
+    // 事件监听
+    document.getElementById('registerForm').addEventListener('submit', handleRegister);
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
+    document.getElementById('recordForm').addEventListener('submit', handleRecordSubmit);
+    document.getElementById('goalForm').addEventListener('submit', handleGoalSubmit);
+    document.getElementById('showRegister').addEventListener('click', e => { e.preventDefault(); document.getElementById('authPage').style.display = 'none'; document.getElementById('registerPage').style.display = 'flex'; });
+    document.getElementById('showLogin').addEventListener('click', e => { e.preventDefault(); document.getElementById('registerPage').style.display = 'none'; document.getElementById('authPage').style.display = 'flex'; });
+    document.getElementById('recordModal').addEventListener('click', e => { if (e.target.id === 'recordModal') closeModal(); });
   </script>
 </body>
 </html>
